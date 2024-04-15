@@ -1,7 +1,8 @@
 import pygame
 from block import Block
-# from blockGroup import BlockGroup
+from blockGroup import BlockGroup
 from tetrisBlock import TetrisBlock
+from random import shuffle
 from constants import *
 
 
@@ -9,10 +10,15 @@ class Game:
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
         self.screen = screen
         self.clock = clock
+        self.obstacle_group = BlockGroup(self.screen)
         self.controlled_block = TetrisBlock(
             self.screen,
-            7
+            7,
+            self.obstacle_group
         )
+        self.queue = []
+        self.add_to_queue()
+        self.add_to_queue()
         self.controlled_block.controlled()
 
     def loop(self) -> None:
@@ -27,14 +33,24 @@ class Game:
                         return
                 self.controlled_block.update(event)
             self.controlled_block.check_move_down()
+            if not self.controlled_block.sprites():
+                self.controlled_block.add_block(self.queue.pop(0))
+                if len(self.queue) <= 7:
+                    self.add_to_queue()
             self.draw()
 
     def draw(self) -> None:
         self.screen.fill(BG_COLOR)
+        self.obstacle_group.draw()
         self.controlled_block.draw()
         self.draw_grid(HOLD_GRID_START, HOLD_GRID_SIZE)
         self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
         pygame.display.flip()
+
+    def add_to_queue(self):
+        l = list(range(1, 8))
+        shuffle(l)
+        self.queue.extend(l)
 
     def update(self) -> None:
         self.clock.tick(FRAME_RATE)
