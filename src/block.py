@@ -11,7 +11,7 @@ class Block(pygame.sprite.Sprite):
         self.rect.topleft = self.position
     
     def move_down(self) -> None:
-        self.rect.move_ip([0, BLOCK_SIZE])
+        self.move((0, BLOCK_SIZE))
     
     def move(self, direction: Coordinate):
         self.position = self.rect.left + direction[0], self.rect.top + direction[1]

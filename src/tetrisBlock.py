@@ -106,6 +106,7 @@ class TetrisBlock(BlockGroup):
             # rotate +/- 90 degrees
             position = (x * c - y * s + dx, x * s + y * c + dy)
             self.sprites()[i].set_position((position[0], position[1]))
+        # TODO: check for clipping between sprites after rotating
         for sprite in self.sprites():
             while sprite.position[0] < FIELD_GRID_START[0]:
                 self.move((BLOCK_SIZE, 0))

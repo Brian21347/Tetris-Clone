@@ -37,7 +37,7 @@ class Game:
                 self.controlled_block.add_block(self.queue.pop(0))
                 if len(self.queue) <= 7:
                     self.add_to_queue()
-                self.obstacle_group.check_lines()
+                self.controlled_block.line_clears += self.obstacle_group.check_lines()
             self.draw()
 
     def draw(self) -> None:
