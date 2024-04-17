@@ -1,10 +1,11 @@
 import pygame
 from game import Game
+from constants import * 
 
 
 # pygame init
 pygame.init()
-screen = pygame.display.set_mode([800, 1000], pygame.RESIZABLE)
+screen = pygame.display.set_mode(SCREEN_SIZE, pygame.RESIZABLE)
 pygame.display.set_caption("Tetris")
 
 

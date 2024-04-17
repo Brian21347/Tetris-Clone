@@ -3,6 +3,7 @@ from constants import *
 from blockGroup import BlockGroup
 from block import Block
 from math import sin, cos, pi
+from time import sleep
 
 
 BlockId = tuple[tuple[Coordinate], Coordinate]
@@ -71,6 +72,9 @@ class TetrisBlock(BlockGroup):
         if not self.__player_controlled:
             return
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                self.hard_drop()
+                return
             direction: Coordinate = None
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 direction = -BLOCK_SIZE, 0
@@ -82,6 +86,10 @@ class TetrisBlock(BlockGroup):
                 self.move_down()
             if direction is not None:
                 self.checked_move(direction)
+
+    def hard_drop(self) -> None:
+        while self.move_down():
+            pass
 
     def checked_move(self, direction: Coordinate):
         self.move(direction)
@@ -145,7 +153,7 @@ class TetrisBlock(BlockGroup):
                 for block in TetrisBlock.BLOCKS[block_id])
         )
 
-    def move_down(self):
+    def move_down(self) -> bool:
         sprite: Block
         self.previous_time = pygame.time.get_ticks()
         self.move((0, BLOCK_SIZE))
@@ -153,8 +161,9 @@ class TetrisBlock(BlockGroup):
             if pygame.sprite.spritecollide(sprite, self.obstacle_group, False):
                 self.move((0, -BLOCK_SIZE))
                 self.add_sprites_to(self.obstacle_group)
-                break
-            if sprite.position[1] > FIELD_GRID_START[1] + FIELD_GRID_SIZE[1] - BLOCK_SIZE:
+                return False
+            if sprite.position[1] >= FIELD_GRID_START[1] + FIELD_GRID_SIZE[1]:
                 self.move((0, -BLOCK_SIZE))
                 self.add_sprites_to(self.obstacle_group)
-                break
+                return False
+        return True

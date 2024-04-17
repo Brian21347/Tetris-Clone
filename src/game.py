@@ -1,5 +1,4 @@
 import pygame
-from block import Block
 from blockGroup import BlockGroup
 from tetrisBlock import TetrisBlock
 from random import shuffle
