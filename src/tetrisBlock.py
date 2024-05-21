@@ -37,30 +37,31 @@ class TetrisBlock(BlockGroup):
         )
     }
 
-    def __init__(self, screen: pygame.Surface, block_id: int, obstacle_group: BlockGroup):
+    def __init__(self, screen: pygame.Surface, block_id: int, obstacle_group: BlockGroup, x_offset=None, y_offset=None):
         if block_id not in TetrisBlock.BLOCKS:
             raise ValueError("Block Id is not valid.")
         self.obstacle_group = obstacle_group
         self.block_id = block_id
 
-        x_offset = (
-            (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] / 2) //
-            BLOCK_SIZE - TetrisBlock.BLOCKS[block_id][1][0] - 1
-        ) * BLOCK_SIZE
-        y_offset = FIELD_GRID_START[1]
+        if not x_offset:
+            x_offset = (
+                (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] / 2) //
+                BLOCK_SIZE - TetrisBlock.BLOCKS[block_id][1][0] - 1
+            ) * BLOCK_SIZE
+        if not y_offset:
+            y_offset = FIELD_GRID_START[1]
         self.previous_time: int = pygame.time.get_ticks()
 
-        super().__init__(
-            screen,
-            *(
-                Block(
-                    (block[0] * BLOCK_SIZE + x_offset,
-                     block[1] * BLOCK_SIZE + y_offset),
-                    ASSET_PATH % block_id
-                )
-                for block in TetrisBlock.BLOCKS[block_id]
+        blocks = [
+            Block(
+                (block[0] * BLOCK_SIZE + x_offset,
+                    block[1] * BLOCK_SIZE + y_offset),
+                ASSET_PATH % block_id
             )
-        )
+            for block in TetrisBlock.BLOCKS[block_id]
+        ]
+
+        super().__init__(screen, *(blocks))
 
     def check_move_down(self):
         if not (pygame.time.get_ticks() - self.previous_time > INITIAL_MOVEMENT_TIME /

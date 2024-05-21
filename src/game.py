@@ -8,8 +8,6 @@ from constants import *
 
 class Game:
     held: TetrisBlock
-    upcomming: list[TetrisBlock] = []
-
 
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
         self.screen = screen
@@ -20,7 +18,15 @@ class Game:
             7,
             self.obstacle_group
         )
-        self.queue = []
+
+        self.grid_screen = pygame.surface.Surface(SCREEN_SIZE).convert_alpha()
+        self.grid_screen.fill([0, 0, 0, 0])
+        self.draw_grid(HOLD_GRID_START, HOLD_GRID_SIZE)
+        self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
+        for y in range(UPCOMING_NUMBER):
+            self.draw_grid([UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + 3 * y * BLOCK_SIZE], [4 * BLOCK_SIZE, 2 * BLOCK_SIZE])
+
+        self.queue: list[TetrisBlock] = []
         self.add_to_queue()
         self.add_to_queue()
         self.controlled_block.controlled()
@@ -39,7 +45,9 @@ class Game:
             self.controlled_block.check_move_down()
 
             if not self.controlled_block.sprites():  # check if the block was placed
-                self.controlled_block.add_block(self.queue.pop(0))
+                self.controlled_block.add_block(self.queue.pop(0).block_id)
+                for sprite in self.queue:
+                    sprite.move([0, -3 *BLOCK_SIZE])
                 if len(self.queue) <= 7:
                     self.add_to_queue()
                 self.controlled_block.line_clears += self.obstacle_group.check_lines()
@@ -49,7 +57,12 @@ class Game:
     def show_preview(self) -> None:
         preview_block = self.controlled_block.clone()
         preview_block.hard_drop(kill=False)
+        controlled_block_positions = [
+            controlled_block_sprite.position for controlled_block_sprite in self.controlled_block.sprites()
+        ]
         for sprite in preview_block.sprites():
+            if sprite.position in controlled_block_positions:
+                continue
             sprite: Block
             img = self.controlled_block.sprites()[0].image
             rect = pygame.rect.Rect(*sprite.rect.topleft, BLOCK_SIZE, BLOCK_SIZE)
@@ -60,14 +73,20 @@ class Game:
         self.obstacle_group.draw()
         self.controlled_block.draw()
         self.show_preview()
-        self.draw_grid(HOLD_GRID_START, HOLD_GRID_SIZE)
-        self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
+        [sprite.draw() for sprite in self.queue[:5]]
+        self.screen.blit(self.grid_screen, [0, 0])
         pygame.display.flip()
 
     def add_to_queue(self):
-        l = list(range(1, 8))
-        shuffle(l)
-        self.queue.extend(l)
+        block_ids = list(range(1, 8))
+        shuffle(block_ids)
+        for block_id in block_ids:
+            self.queue.append(
+                TetrisBlock(
+                    self.screen, block_id, self.obstacle_group, 
+                    x_offset=UPCOMING_GRID_START[0], y_offset=UPCOMING_GRID_START[1] + (len(self.queue)) * 3 * BLOCK_SIZE
+                ) 
+            )
 
     def update(self) -> None:
         self.clock.tick(FRAME_RATE)
@@ -75,9 +94,9 @@ class Game:
     def draw_grid(self, starting_position: Coordinate, size: Coordinate) -> None:
         for x in range(0, size[0] + 1, BLOCK_SIZE):
             x += starting_position[0]
-            pygame.draw.line(self.screen, GRID_COLOR, (x,
+            pygame.draw.line(self.grid_screen, GRID_COLOR, (x,
                              starting_position[1]), (x, starting_position[1] + size[1]))
         for y in range(0, size[1] + 1, BLOCK_SIZE):
             y += starting_position[1]
-            pygame.draw.line(self.screen, GRID_COLOR,
+            pygame.draw.line(self.grid_screen, GRID_COLOR,
                              (starting_position[0], y), (starting_position[0] + size[0], y))
