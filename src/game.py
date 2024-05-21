@@ -7,6 +7,10 @@ from constants import *
 
 
 class Game:
+    held: TetrisBlock
+    upcomming: list[TetrisBlock] = []
+
+
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
         self.screen = screen
         self.clock = clock
@@ -47,8 +51,9 @@ class Game:
         preview_block.hard_drop(kill=False)
         for sprite in preview_block.sprites():
             sprite: Block
+            img = self.controlled_block.sprites()[0].image
             rect = pygame.rect.Rect(*sprite.rect.topleft, BLOCK_SIZE, BLOCK_SIZE)
-            pygame.draw.rect(self.screen, "gray", rect, 5)
+            pygame.draw.rect(self.screen, img.get_at([0, 0]), rect, BLOCK_OUTLINE_SIZE)
 
     def draw(self) -> None:
         self.screen.fill(BG_COLOR)
