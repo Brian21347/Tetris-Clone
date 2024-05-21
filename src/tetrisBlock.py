@@ -87,8 +87,8 @@ class TetrisBlock(BlockGroup):
             if direction is not None:
                 self.checked_move(direction)
 
-    def hard_drop(self) -> None:
-        while self.move_down():
+    def hard_drop(self, kill=True) -> None:
+        while self.move_down(kill):
             pass
 
     def checked_move(self, direction: Coordinate):
@@ -153,17 +153,28 @@ class TetrisBlock(BlockGroup):
                 for block in TetrisBlock.BLOCKS[block_id])
         )
 
-    def move_down(self) -> bool:
+    def move_down(self, kill=True) -> bool:
         sprite: Block
         self.previous_time = pygame.time.get_ticks()
         self.move((0, BLOCK_SIZE))
         for sprite in self.sprites():
             if pygame.sprite.spritecollide(sprite, self.obstacle_group, False):
                 self.move((0, -BLOCK_SIZE))
-                self.add_sprites_to(self.obstacle_group)
+                if kill: self.add_sprites_to(self.obstacle_group)
                 return False
             if sprite.position[1] >= FIELD_GRID_START[1] + FIELD_GRID_SIZE[1]:
                 self.move((0, -BLOCK_SIZE))
-                self.add_sprites_to(self.obstacle_group)
+                if kill: self.add_sprites_to(self.obstacle_group)
                 return False
         return True
+
+    def clone(self) -> 'TetrisBlock':
+        cloned =  TetrisBlock(self.screen, self.block_id, self.obstacle_group)
+        cloned.empty()
+        [cloned.add_internal(
+                Block(
+                    sprite.rect.topleft,
+                    ASSET_PATH % self.block_id
+                )
+            ) for sprite in self.sprites()]
+        return cloned

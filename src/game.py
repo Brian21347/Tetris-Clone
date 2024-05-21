@@ -1,6 +1,7 @@
 import pygame
 from blockGroup import BlockGroup
 from tetrisBlock import TetrisBlock
+from block import Block
 from random import shuffle
 from constants import *
 
@@ -32,17 +33,28 @@ class Game:
                         return
                 self.controlled_block.update(event)
             self.controlled_block.check_move_down()
-            if not self.controlled_block.sprites():
+
+            if not self.controlled_block.sprites():  # check if the block was placed
                 self.controlled_block.add_block(self.queue.pop(0))
                 if len(self.queue) <= 7:
                     self.add_to_queue()
                 self.controlled_block.line_clears += self.obstacle_group.check_lines()
+            
             self.draw()
+
+    def show_preview(self) -> None:
+        preview_block = self.controlled_block.clone()
+        preview_block.hard_drop(kill=False)
+        for sprite in preview_block.sprites():
+            sprite: Block
+            rect = pygame.rect.Rect(*sprite.rect.topleft, BLOCK_SIZE, BLOCK_SIZE)
+            pygame.draw.rect(self.screen, "gray", rect, 5)
 
     def draw(self) -> None:
         self.screen.fill(BG_COLOR)
         self.obstacle_group.draw()
         self.controlled_block.draw()
+        self.show_preview()
         self.draw_grid(HOLD_GRID_START, HOLD_GRID_SIZE)
         self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
         pygame.display.flip()
