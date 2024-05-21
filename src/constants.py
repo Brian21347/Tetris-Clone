@@ -6,6 +6,9 @@ BLOCK_SIZE: int = 40
 Coordinate = tuple[int, int]
 SCREEN_SIZE: Coordinate = (BLOCK_SIZE * 20, BLOCK_SIZE * 25)
 
+DELAY: int = 200
+INTERVAL: int = 100
+
 ASSET_PATH: str = join_path("Assets", "Tetris Block %s.png")
 
 HOLD_GRID_START: Coordinate = (BLOCK_SIZE // 2, BLOCK_SIZE // 2)
