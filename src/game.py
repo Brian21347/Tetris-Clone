@@ -31,6 +31,9 @@ class Game:
         self.add_to_queue()
         self.controlled_block.controlled()
 
+        self.score = 0
+        self.font = pygame.font.SysFont("Roboto", 30)
+
     def loop(self) -> None:
         while True:
             for event in pygame.event.get():
@@ -50,7 +53,10 @@ class Game:
                     sprite.move([0, -3 *BLOCK_SIZE])
                 if len(self.queue) <= 7:
                     self.add_to_queue()
-                self.controlled_block.line_clears += self.obstacle_group.check_lines()
+                line_clears = self.obstacle_group.check_lines()
+                self.controlled_block.line_clears += line_clears
+                self.score += POINTS[line_clears] * (self.controlled_block.line_clears // 10 + 1)
+
             
             self.draw()
 
@@ -74,6 +80,8 @@ class Game:
         self.controlled_block.draw()
         self.show_preview()
         [sprite.draw() for sprite in self.queue[:5]]
+        text = self.font.render(str(self.score), True, SCORE_COLOR)
+        self.screen.blit(text, SCORE_POSITION)
         self.screen.blit(self.grid_screen, [0, 0])
         pygame.display.flip()
 

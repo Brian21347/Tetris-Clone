@@ -64,10 +64,9 @@ class TetrisBlock(BlockGroup):
         super().__init__(screen, *(blocks))
 
     def check_move_down(self):
-        if not (pygame.time.get_ticks() - self.previous_time > INITIAL_MOVEMENT_TIME /
-                (LINE_CLEAR_SPEED_UP * TetrisBlock.line_clears // 10 + 1)):
-            return
-        self.move_down()
+        if pygame.time.get_ticks() - self.previous_time > (INITIAL_MOVEMENT_TIME /
+                (LINE_CLEAR_SPEED_UP * (self.line_clears // 10) + 1)):
+            self.move_down()
 
     def update(self, event: pygame.event.EventType):
         if not self.__player_controlled:
