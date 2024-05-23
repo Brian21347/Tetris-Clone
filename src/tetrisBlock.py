@@ -80,6 +80,8 @@ class TetrisBlock(BlockGroup):
                 direction = -BLOCK_SIZE, 0
             elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 direction = BLOCK_SIZE, 0
+            elif event.key == pygame.K_z:
+                self.rotate(-1)
             elif event.key == pygame.K_UP or event.key == pygame.K_w:
                 self.rotate(1)
             elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -93,14 +95,8 @@ class TetrisBlock(BlockGroup):
 
     def checked_move(self, direction: Coordinate):
         self.move(direction)
-        for sprite in self.sprites():
-            if (sprite.position[0] < FIELD_GRID_START[0] or
-                    sprite.position[0] >= FIELD_GRID_START[0] + FIELD_GRID_SIZE[0]):
-                self.move((-direction[0], -direction[1]))
-                break
-            if (pygame.sprite.spritecollide(sprite, self.obstacle_group, False)):
-                self.move((-direction[0], -direction[1]))
-                break
+        if self.collides():
+            self.move((-direction[0], -direction[1]))
 
     def move(self, direction: Coordinate):
         [sprite.move(direction) for sprite in self.sprites()]
@@ -134,7 +130,26 @@ class TetrisBlock(BlockGroup):
         other.add(*self.sprites())
         self.empty()
 
+    def collides(self) -> bool:
+        for sprite in self.sprites():
+            if (sprite.position[0] < FIELD_GRID_START[0] or
+                    sprite.position[0] >= FIELD_GRID_START[0] + FIELD_GRID_SIZE[0]):
+                return True
+            if (sprite.position[1] >= FIELD_GRID_START[1] + FIELD_GRID_SIZE[1]):
+                return True
+            if (pygame.sprite.spritecollide(sprite, self.obstacle_group, False)):
+                return True
+        return False
+
+    def set_topleft(self, position: Coordinate):
+        top, left = self.screen.get_size()
+        for sprite in self.sprites():
+            top = min(sprite.position[1], top)
+            left = min(sprite.position[0], left)
+        self.move((position[0] - left, position[1] - top))
+
     def add_block(self, block_id: int):
+        self.empty()
         if block_id not in TetrisBlock.BLOCKS:
             raise ValueError("Block Id is not valid.")
         self.block_id = block_id
@@ -154,18 +169,12 @@ class TetrisBlock(BlockGroup):
         )
 
     def move_down(self, kill=True) -> bool:
-        sprite: Block
         self.previous_time = pygame.time.get_ticks()
         self.move((0, BLOCK_SIZE))
-        for sprite in self.sprites():
-            if pygame.sprite.spritecollide(sprite, self.obstacle_group, False):
-                self.move((0, -BLOCK_SIZE))
-                if kill: self.add_sprites_to(self.obstacle_group)
-                return False
-            if sprite.position[1] >= FIELD_GRID_START[1] + FIELD_GRID_SIZE[1]:
-                self.move((0, -BLOCK_SIZE))
-                if kill: self.add_sprites_to(self.obstacle_group)
-                return False
+        if self.collides():
+            self.move((0, -BLOCK_SIZE))
+            if kill: self.add_sprites_to(self.obstacle_group)
+            return False
         return True
 
     def clone(self) -> 'TetrisBlock':

@@ -2,7 +2,7 @@ from os.path import join as join_path
 BG_COLOR: str = "light gray"
 GRID_COLOR: str = "black"
 FRAME_RATE: int = 100
-BLOCK_SIZE: int = 40
+BLOCK_SIZE: int = 30
 Coordinate = tuple[int, int]
 SCREEN_SIZE: Coordinate = (BLOCK_SIZE * 20, BLOCK_SIZE * 26)
 

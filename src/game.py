@@ -4,11 +4,14 @@ from tetrisBlock import TetrisBlock
 from block import Block
 from random import shuffle
 from constants import *
+from sys import exit
+from time import sleep
 
 
 class Game:
-    held: TetrisBlock
-
+    held: TetrisBlock = None
+    just_held: bool = False
+    
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
         self.screen = screen
         self.clock = clock
@@ -44,21 +47,59 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         return
+                    if event.key == pygame.K_c and not self.just_held:
+                        self.hold()
                 self.controlled_block.update(event)
+                if self.held is not None: self.held.update(event)
             self.controlled_block.check_move_down()
 
             if not self.controlled_block.sprites():  # check if the block was placed
-                self.controlled_block.add_block(self.queue.pop(0).block_id)
-                for sprite in self.queue:
-                    sprite.move([0, -3 *BLOCK_SIZE])
-                if len(self.queue) <= 7:
-                    self.add_to_queue()
-                line_clears = self.obstacle_group.check_lines()
-                self.controlled_block.line_clears += line_clears
-                self.score += POINTS[line_clears] * (self.controlled_block.line_clears // 10 + 1)
-
-            
+                self.add_block()
             self.draw()
+
+    def add_block(self) -> None:
+        self.just_held = False
+        self.controlled_block.add_block(self.queue.pop(0).block_id)
+        if self.controlled_block.collides(): 
+            self.show_game_over()
+        for sprite in self.queue:
+            sprite.move([0, -3 *BLOCK_SIZE])
+        if len(self.queue) <= 7:
+            self.add_to_queue()
+        line_clears = self.obstacle_group.check_lines()
+        self.controlled_block.line_clears += line_clears
+        self.score += POINTS[line_clears] * (self.controlled_block.line_clears // 10 + 1)
+
+    def hold(self) -> None:
+        if self.held is not None:
+            tmp = self.held.block_id
+            self.held = TetrisBlock(self.screen, self.controlled_block.block_id, self.obstacle_group)
+            self.controlled_block.add_block(tmp)
+        else:
+            self.held = TetrisBlock(self.screen, self.controlled_block.block_id, self.obstacle_group)
+            self.add_block()
+
+        self.held.uncontrolled()
+        self.held.set_topleft(HOLD_GRID_START)
+        self.just_held = True
+    
+    def show_game_over(self) -> None:
+        empty = pygame.surface.Surface(self.screen.get_size())
+        empty.set_alpha(125)
+        empty.fill("gray")
+        self.screen.blit(empty, (0, 0))
+        text = self.font.render("Game over", True, "black")
+        self.screen.blit(
+            text, 
+            [
+                self.screen.get_width() / 2 - text.get_width() / 2, 
+                self.screen.get_height() / 2 - text.get_height() / 2
+            ]
+        )
+        pygame.display.flip()
+        sleep(5)
+        exit(0)
+        
 
     def show_preview(self) -> None:
         preview_block = self.controlled_block.clone()
@@ -76,6 +117,8 @@ class Game:
 
     def draw(self) -> None:
         self.screen.fill(BG_COLOR)
+        if self.held is not None: 
+            self.held.draw()
         self.obstacle_group.draw()
         self.controlled_block.draw()
         self.show_preview()

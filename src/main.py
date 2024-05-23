@@ -8,6 +8,7 @@ from constants import *
 # pygame init
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE, pygame.RESIZABLE)
+screen.set_alpha()
 pygame.display.set_caption("Tetris")
 
 
