@@ -6,6 +6,7 @@ from random import shuffle
 from constants import *
 from sys import exit
 from time import sleep
+from switchButton import SwitchButton
 
 
 class Game:
@@ -36,8 +37,23 @@ class Game:
 
         self.score = 0
         self.font = pygame.font.SysFont("Roboto", 30)
+
+        self.switch_button = SwitchButton(
+            self.screen, 
+            [BLOCK_SIZE / 2, self.screen.get_height() - 2 * BLOCK_SIZE], 
+            [BLOCK_SIZE * 4, 1.5 * BLOCK_SIZE], 
+            ["Piano", "Music Box", "Strings"], 
+            "black", 
+            "light gray", 
+            "dark gray", 
+            3, 
+            10, 
+            True
+        )
         
-        pygame.mixer.music.load(THEME_ASSET_PATH % "Piano")
+        self.theme = "Piano"
+        
+        pygame.mixer.music.load(THEME_ASSET_PATH % self.theme)
         pygame.mixer.music.play(-1)  # play infinitely
 
     def loop(self) -> None:
@@ -54,6 +70,12 @@ class Game:
                         self.hold()
                 self.controlled_block.update(event)
                 if self.held is not None: self.held.update(event)
+
+                self.switch_button.update(event)
+                if self.switch_button.get_displayed_text() != self.theme:
+                    self.theme = self.switch_button.get_displayed_text()
+                    pygame.mixer.music.load(THEME_ASSET_PATH % self.theme)
+                    pygame.mixer.music.play(-1)  # play infinitely
             self.controlled_block.check_move_down()
 
             if not self.controlled_block.sprites():  # check if the block was placed
@@ -129,6 +151,7 @@ class Game:
         text = self.font.render(f"{self.score:,}", True, SCORE_COLOR)
         self.screen.blit(text, SCORE_POSITION)
         self.screen.blit(self.grid_screen, [0, 0])
+        self.switch_button.draw()
         pygame.display.flip()
 
     def add_to_queue(self):
