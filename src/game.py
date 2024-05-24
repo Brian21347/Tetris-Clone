@@ -36,6 +36,9 @@ class Game:
 
         self.score = 0
         self.font = pygame.font.SysFont("Roboto", 30)
+        
+        pygame.mixer.music.load(THEME_ASSET_PATH % "Piano")
+        pygame.mixer.music.play(-1)  # play infinitely
 
     def loop(self) -> None:
         while True:
@@ -123,7 +126,7 @@ class Game:
         self.controlled_block.draw()
         self.show_preview()
         [sprite.draw() for sprite in self.queue[:5]]
-        text = self.font.render(str(self.score), True, SCORE_COLOR)
+        text = self.font.render(f"{self.score:,}", True, SCORE_COLOR)
         self.screen.blit(text, SCORE_POSITION)
         self.screen.blit(self.grid_screen, [0, 0])
         pygame.display.flip()
