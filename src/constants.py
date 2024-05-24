@@ -11,7 +11,8 @@ INTERVAL: int = 100
 
 BLOCK_OUTLINE_SIZE: int = 5
 
-ASSET_PATH: str = join_path("Assets", "Tetris Block %s.png")
+IMAGE_ASSET_PATH: str = join_path("Assets", "images", "Tetris Block %s.png")
+THEME_ASSET_PATH: str = join_path("Assets", "themes", "%s.mp3")
 
 HOLD_GRID_START: Coordinate = (BLOCK_SIZE // 2, BLOCK_SIZE // 2 + BLOCK_SIZE)
 HOLD_GRID_SIZE: Coordinate = (4 * BLOCK_SIZE, 4 * BLOCK_SIZE)

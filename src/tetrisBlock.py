@@ -56,7 +56,7 @@ class TetrisBlock(BlockGroup):
             Block(
                 (block[0] * BLOCK_SIZE + x_offset,
                     block[1] * BLOCK_SIZE + y_offset),
-                ASSET_PATH % block_id
+                IMAGE_ASSET_PATH % block_id
             )
             for block in TetrisBlock.BLOCKS[block_id]
         ]
@@ -163,7 +163,7 @@ class TetrisBlock(BlockGroup):
             *(Block(
                 (block[0] * BLOCK_SIZE + x_offset,
                  block[1] * BLOCK_SIZE + y_offset),
-                ASSET_PATH % block_id
+                IMAGE_ASSET_PATH % block_id
             )
                 for block in TetrisBlock.BLOCKS[block_id])
         )
@@ -183,7 +183,7 @@ class TetrisBlock(BlockGroup):
         [cloned.add_internal(
                 Block(
                     sprite.rect.topleft,
-                    ASSET_PATH % self.block_id
+                    IMAGE_ASSET_PATH % self.block_id
                 )
             ) for sprite in self.sprites()]
         return cloned
