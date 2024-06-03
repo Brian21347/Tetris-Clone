@@ -4,8 +4,7 @@ from tetrisBlock import TetrisBlock
 from block import Block
 from random import shuffle
 from constants import *
-from sys import exit
-from time import sleep
+from volumeButton import VolumeButton
 from switchButton import SwitchButton
 
 
@@ -40,15 +39,28 @@ class Game:
 
         self.switch_button = SwitchButton(
             self.screen, 
-            [BLOCK_SIZE / 2, self.screen.get_height() - 2 * BLOCK_SIZE], 
-            [BLOCK_SIZE * 4, 1.5 * BLOCK_SIZE], 
-            ["Piano", "Music Box", "Strings"], 
-            "black", 
-            "light gray", 
-            "dark gray", 
-            3, 
-            10, 
-            True
+            SWITCH_BUTTON_START, 
+            SWITCH_BUTTON_SIZE, 
+            SWITCH_BUTTON_THEMES, 
+            SWITCH_BUTTON_TEXT_COLOR, 
+            SWITCH_BUTTON_BACKGROUND_COLOR, 
+            SWITCH_BUTTON_BORDER_COLOR, 
+            SWITCH_BUTTON_BORDER_SIZE, 
+            SWITCH_BUTTON_BORDER_RADIUS, 
+            SWITCH_BUTTON_FILL_CENTER
+        )
+        
+        self.volumeButton = VolumeButton(
+            self.screen, 
+            VOLUME_BUTTON_START,
+            VOLUME_BUTTON_SIZE,
+            VOLUME_BUTTON_EXPAND_RECT,
+            VOLUME_BUTTON_STARTING_VOLUME,
+            VOLUME_BUTTON_BACKGROUND_COLOR,
+            VOLUME_BUTTON_BORDER_COLOR,
+            VOLUME_BUTTON_BORDER_SIZE,
+            VOLUME_BUTTON_BORDER_RADIUS,
+            VOLUME_BUTTON_FILL_CENTER
         )
         
         self.theme = "Piano"
@@ -71,6 +83,9 @@ class Game:
                 self.controlled_block.update(event)
                 if self.held is not None: self.held.update(event)
 
+                self.volumeButton.update(event)
+                pygame.mixer.music.set_volume(self.volumeButton.get_volume())
+
                 self.switch_button.update(event)
                 if self.switch_button.get_displayed_text() != self.theme:
                     self.theme = self.switch_button.get_displayed_text()
@@ -86,7 +101,7 @@ class Game:
         self.just_held = False
         self.controlled_block.add_block(self.queue.pop(0).block_id)
         if self.controlled_block.collides(): 
-            self.show_game_over()
+            raise GameExit
         for sprite in self.queue:
             sprite.move([0, -3 *BLOCK_SIZE])
         if len(self.queue) <= 7:
@@ -107,24 +122,6 @@ class Game:
         self.held.uncontrolled()
         self.held.set_topleft(HOLD_GRID_START)
         self.just_held = True
-    
-    def show_game_over(self) -> None:
-        empty = pygame.surface.Surface(self.screen.get_size())
-        empty.set_alpha(125)
-        empty.fill("gray")
-        self.screen.blit(empty, (0, 0))
-        text = self.font.render("Game over", True, "black")
-        self.screen.blit(
-            text, 
-            [
-                self.screen.get_width() / 2 - text.get_width() / 2, 
-                self.screen.get_height() / 2 - text.get_height() / 2
-            ]
-        )
-        pygame.display.flip()
-        sleep(5)
-        exit(0)
-        
 
     def show_preview(self) -> None:
         preview_block = self.controlled_block.clone()
@@ -152,6 +149,7 @@ class Game:
         self.screen.blit(text, SCORE_POSITION)
         self.screen.blit(self.grid_screen, [0, 0])
         self.switch_button.draw()
+        self.volumeButton.draw()
         pygame.display.flip()
 
     def add_to_queue(self):
