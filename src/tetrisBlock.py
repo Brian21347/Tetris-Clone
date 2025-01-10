@@ -68,13 +68,13 @@ class TetrisBlock(BlockGroup):
                 (LINE_CLEAR_SPEED_UP * (self.line_clears // 10) + 1)):
             self.move_down()
 
-    def update(self, event: pygame.event.EventType):
+    def update(self, event: pygame.event.EventType) -> int:
         if not self.__player_controlled:
             return
+        score_bonus = 0
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                self.hard_drop()
-                return
+                score_bonus += self.hard_drop()
             direction: Coordinate = None
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 direction = -BLOCK_SIZE, 0
@@ -86,12 +86,16 @@ class TetrisBlock(BlockGroup):
                 self.rotate(1)
             elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.move_down()
+                score_bonus += 1
             if direction is not None:
                 self.checked_move(direction)
+        return score_bonus
 
-    def hard_drop(self, kill=True) -> None:
+    def hard_drop(self, kill=True) -> int:
+        score_bonus = 0
         while self.move_down(kill):
-            pass
+            score_bonus += 1
+        return score_bonus
 
     def checked_move(self, direction: Coordinate):
         self.move(direction)

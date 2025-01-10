@@ -6,6 +6,7 @@ from random import shuffle
 from constants import *
 from volumeButton import VolumeButton
 from switchButton import SwitchButton
+from textBox import TextBox
 
 
 class Game:
@@ -27,7 +28,7 @@ class Game:
         self.draw_grid(HOLD_GRID_START, HOLD_GRID_SIZE)
         self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
         for y in range(UPCOMING_NUMBER):
-            self.draw_grid([UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + 3 * y * BLOCK_SIZE], [4 * BLOCK_SIZE, 2 * BLOCK_SIZE])
+            self.draw_grid([UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + (UPCOMING_GAP_SIZE + UPCOMING_GRID_HIGHT) * y], [4 * BLOCK_SIZE, 2 * BLOCK_SIZE])
 
         self.queue: list[TetrisBlock] = []
         self.add_to_queue()
@@ -50,7 +51,7 @@ class Game:
             SWITCH_BUTTON_FILL_CENTER
         )
         
-        self.volumeButton = VolumeButton(
+        self.volume_button = VolumeButton(
             self.screen, 
             VOLUME_BUTTON_START,
             VOLUME_BUTTON_SIZE,
@@ -62,6 +63,17 @@ class Game:
             VOLUME_BUTTON_BORDER_RADIUS,
             VOLUME_BUTTON_FILL_CENTER
         )
+
+        self.text_buttons = [
+            TextBox(
+                self.screen,
+                start,
+                TEXT_BUTTON_SIZE,
+                text,
+                TEXT_BUTTON_TEXT_COLOR,
+            ) 
+            for start, text in zip(TEXT_BUTTON_STARTS, TEXT_BUTTON_TEXTS)
+        ]
         
         self.theme = "Piano"
         
@@ -80,11 +92,11 @@ class Game:
                         return
                     if event.key == pygame.K_c and not self.just_held:
                         self.hold()
-                self.controlled_block.update(event)
+                self.score += self.controlled_block.update(event)
                 if self.held is not None: self.held.update(event)
 
-                self.volumeButton.update(event)
-                pygame.mixer.music.set_volume(self.volumeButton.get_volume())
+                self.volume_button.update(event)
+                pygame.mixer.music.set_volume(self.volume_button.get_volume())
 
                 self.switch_button.update(event)
                 if self.switch_button.get_displayed_text() != self.theme:
@@ -103,7 +115,7 @@ class Game:
         if self.controlled_block.collides(): 
             raise GameExit
         for sprite in self.queue:
-            sprite.move([0, -3 *BLOCK_SIZE])
+            sprite.move([0, -UPCOMING_GRID_HIGHT - UPCOMING_GAP_SIZE])
         if len(self.queue) <= 7:
             self.add_to_queue()
         line_clears = self.obstacle_group.check_lines()
@@ -145,11 +157,22 @@ class Game:
         self.controlled_block.draw()
         self.show_preview()
         [sprite.draw() for sprite in self.queue[:5]]
-        text = self.font.render(f"{self.score:,}", True, SCORE_COLOR)
-        self.screen.blit(text, SCORE_POSITION)
         self.screen.blit(self.grid_screen, [0, 0])
         self.switch_button.draw()
-        self.volumeButton.draw()
+        self.volume_button.draw()
+        for text_button in self.text_buttons:
+            text_button.draw()
+        
+        line_clears = self.controlled_block.line_clears
+        score_texts = [self.font.render(text, True, SCORE_COLOR) for text in [f"{self.score:,}", f"{int(line_clears // 10):,}", f"{line_clears:,}"]]
+        for text, start_pos in zip(score_texts, SCORE_STARTS):
+            self.screen.blit(
+                text,
+                [
+                    start_pos[0] + (SCORE_SIZE[0] - text.get_width()) / 2,
+                    start_pos[1] + (SCORE_SIZE[1] - text.get_height()) / 2,
+                ]
+            )
         pygame.display.flip()
 
     def add_to_queue(self):
@@ -159,7 +182,7 @@ class Game:
             self.queue.append(
                 TetrisBlock(
                     self.screen, block_id, self.obstacle_group, 
-                    x_offset=UPCOMING_GRID_START[0], y_offset=UPCOMING_GRID_START[1] + (len(self.queue)) * 3 * BLOCK_SIZE
+                    x_offset=UPCOMING_GRID_START[0], y_offset=UPCOMING_GRID_START[1] + (len(self.queue)) * (UPCOMING_GRID_HIGHT + UPCOMING_GAP_SIZE)
                 ) 
             )
 
