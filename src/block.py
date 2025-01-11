@@ -2,7 +2,6 @@ import pygame
 from constants import *
 
 class Block(pygame.sprite.Sprite):
-    
     def __init__(self, position: Pii, image_path: str) -> None:
         super().__init__()
         self.position = position

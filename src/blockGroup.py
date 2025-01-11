@@ -33,10 +33,6 @@ class BlockGroup(pygame.sprite.Group):
                 [block.move_down() for block in blocks]
         
         return line_clears
-                    
-    
-    def update(self, *args):
-        pass
     
     def draw(self):
         super().draw(self.screen)

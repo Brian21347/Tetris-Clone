@@ -3,7 +3,6 @@ from constants import *
 from blockGroup import BlockGroup
 from block import Block
 from math import sin, cos, pi
-from time import sleep
 
 
 BlockId = tuple[tuple[Pii], Pii]
