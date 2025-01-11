@@ -6,7 +6,7 @@ from math import sin, cos, pi
 from time import sleep
 
 
-BlockId = tuple[tuple[Coordinate], Coordinate]
+BlockId = tuple[tuple[Pii], Pii]
 
 
 class TetrisBlock(BlockGroup):
@@ -75,7 +75,7 @@ class TetrisBlock(BlockGroup):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 score_bonus += self.hard_drop()
-            direction: Coordinate = None
+            direction: Pii = None
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 direction = -BLOCK_SIZE, 0
             elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -97,12 +97,12 @@ class TetrisBlock(BlockGroup):
             score_bonus += 1
         return score_bonus
 
-    def checked_move(self, direction: Coordinate):
+    def checked_move(self, direction: Pii):
         self.move(direction)
         if self.collides():
             self.move((-direction[0], -direction[1]))
 
-    def move(self, direction: Coordinate):
+    def move(self, direction: Pii):
         [sprite.move(direction) for sprite in self.sprites()]
 
     def rotate(self, direction: int):
@@ -145,7 +145,7 @@ class TetrisBlock(BlockGroup):
                 return True
         return False
 
-    def set_topleft(self, position: Coordinate):
+    def set_topleft(self, position: Pii):
         top, left = self.screen.get_size()
         for sprite in self.sprites():
             top = min(sprite.position[1], top)

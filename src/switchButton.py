@@ -5,8 +5,8 @@ class SwitchButton:
     def __init__(
         self, 
         screen: pygame.Surface, 
-        position: Coordinate,
-        size: Coordinate,
+        position: Pii,
+        size: Pii,
         text_options: list[str], 
         text_color: str, 
         background_color: str, 

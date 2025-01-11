@@ -5,8 +5,8 @@ class TextBox:
     def __init__(
         self, 
         screen: pygame.Surface, 
-        position: Coordinate,
-        size: Coordinate,
+        position: Pii,
+        size: Pii,
         text: str, 
         text_color: str, 
     ) -> None:

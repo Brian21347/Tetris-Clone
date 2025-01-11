@@ -80,16 +80,16 @@ class Game:
         pygame.mixer.music.load(THEME_ASSET_PATH % self.theme)
         pygame.mixer.music.play(-1)  # play infinitely
 
-    def loop(self) -> None:
+    def loop(self) -> int:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    return
+                    raise GameExit
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
-                        return
+                        raise GameExit
                     if event.key == pygame.K_c and not self.just_held:
                         self.hold()
                 self.score += self.controlled_block.update(event)
@@ -106,14 +106,16 @@ class Game:
             self.controlled_block.check_move_down()
 
             if not self.controlled_block.sprites():  # check if the block was placed
-                self.add_block()
+                if not self.add_block(): 
+                    pygame.mixer.music.fadeout(1)
+                    return self.score
             self.draw()
 
     def add_block(self) -> None:
         self.just_held = False
         self.controlled_block.add_block(self.queue.pop(0).block_id)
         if self.controlled_block.collides(): 
-            raise GameExit
+            return False
         for sprite in self.queue:
             sprite.move([0, -UPCOMING_GRID_HIGHT - UPCOMING_GAP_SIZE])
         if len(self.queue) <= 7:
@@ -121,6 +123,7 @@ class Game:
         line_clears = self.obstacle_group.check_lines()
         self.controlled_block.line_clears += line_clears
         self.score += POINTS[line_clears] * (self.controlled_block.line_clears // 10 + 1)
+        return True
 
     def hold(self) -> None:
         if self.held is not None:
@@ -189,7 +192,7 @@ class Game:
     def update(self) -> None:
         self.clock.tick(FRAME_RATE)
 
-    def draw_grid(self, starting_position: Coordinate, size: Coordinate) -> None:
+    def draw_grid(self, starting_position: Pii, size: Pii) -> None:
         for x in range(0, size[0] + 1, BLOCK_SIZE):
             x += starting_position[0]
             pygame.draw.line(self.grid_screen, GRID_COLOR, (x,

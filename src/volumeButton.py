@@ -6,9 +6,9 @@ class VolumeButton:
     def __init__(
         self, 
         screen: pygame.surface.Surface,
-        position: Coordinate, 
-        size: Coordinate,
-        expand_rect: Coordinate,
+        position: Pii, 
+        size: Pii,
+        expand_rect: Pii,
         starting_volume: float,
         background_color: str,
         border_color: str,

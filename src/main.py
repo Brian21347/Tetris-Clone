@@ -3,7 +3,9 @@
 
 import pygame
 import pygame.locals
+from intro import Intro
 from game import Game
+from outro import Outro
 
 from constants import *
 
@@ -24,8 +26,14 @@ clock = pygame.time.Clock()
 
 
 def main() -> None:
-    Game(screen, clock).loop()
+    Intro(screen, clock).loop()
+    while True:
+        Game(screen, clock).loop()
+        Outro(screen, clock).loop()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except GameExit:
+        exit(1)
