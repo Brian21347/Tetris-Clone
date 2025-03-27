@@ -1,5 +1,7 @@
 import pygame
 from constants import *
+from util import add_vectors, scale_vector
+
 
 class SwitchButton:
     def __init__(
@@ -39,10 +41,7 @@ class SwitchButton:
         text = self.font.render(self.text_options[self.current_text_index], True, self.text_color)
         self.screen.blit(
             text, 
-            [
-                self.position[0] + (self.size[0] - text.get_width()) / 2, 
-                self.position[1] + (self.size[1] - text.get_height()) / 2
-            ]
+            add_vectors(self.position, scale_vector(self.size, 1/2), scale_vector(text.get_size(), -1/2))
         )
     
     def update(self, event):

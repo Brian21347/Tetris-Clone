@@ -1,6 +1,13 @@
 # TODO: better rotation, smart mouse block placement
 # Music from: https://www.classicals.de/tetris-theme
 
+
+# TODO: include an editor to add custom blocks
+#   - block shape + point of rotation
+# TODO: fix bug where the blocks don't move up far enough for previews
+# TODO: fix the rotation bugs where blocks move left or right in the air due to repeat rotation
+# TODO: allow the users to choose their control settings
+
 import pygame
 import pygame.locals
 from intro import Intro

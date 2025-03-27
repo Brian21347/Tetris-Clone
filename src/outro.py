@@ -1,5 +1,6 @@
 import pygame
 from constants import *
+from util import add_vectors, scale_vector
 
 
 class Outro:
@@ -34,17 +35,11 @@ class Outro:
         self.screen.blit(self.background, [0, 0])
         self.screen.blit(
             self.game_over_text, 
-            [
-                GAME_OVER_CENTER_POSITION[0] - self.game_over_text.get_width() / 2, 
-                GAME_OVER_CENTER_POSITION[1] - self.game_over_text.get_height() / 2,
-            ]
+            add_vectors(GAME_OVER_CENTER_POSITION, scale_vector(self.game_over_text.get_size(), -1/2)),
         )
 
         self.screen.blit(
             self.restart_prompt_text,
-            [
-                RESTART_PROMPT_CENTER_POSITION[0] - self.restart_prompt_text.get_width() / 2,
-                RESTART_PROMPT_CENTER_POSITION[1] - self.restart_prompt_text.get_height() / 2,
-            ]
+            add_vectors(RESTART_PROMPT_CENTER_POSITION, scale_vector(self.restart_prompt_text.get_size(), -1/2))
         )
         pygame.display.flip()

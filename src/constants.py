@@ -3,7 +3,7 @@ from os.path import join as join_path
 LOGO_PATH: str = join_path("Assets", "images", "Logo.png")
 BG_COLOR: str = "light gray"
 FRAME_RATE: int = 100
-BLOCK_SIZE: int = 30
+BLOCK_SIZE: int = 25
 Pii = tuple[int, int] | list[int, int]
 SCREEN_WIDTH: int = BLOCK_SIZE * 20
 SCREEN_HEIGHT: int = BLOCK_SIZE * 26
@@ -52,7 +52,7 @@ FIELD_GRID_SIZE: Pii = (10 * BLOCK_SIZE, 24 * BLOCK_SIZE)
 
 UPCOMING_GRID_START: Pii = (15.5 * BLOCK_SIZE, 1.5 * BLOCK_SIZE)
 UPCOMING_GRID_HIGHT: int = BLOCK_SIZE * 2
-UPCOMING_GAP_SIZE: int = 0.5 * BLOCK_SIZE
+UPCOMING_GAP_SIZE: int = int(0.5 * BLOCK_SIZE)
 UPCOMING_NUMBER: int = 5
 
 SWITCH_BUTTON_START: Pii = [BLOCK_SIZE / 2, SCREEN_HEIGHT - 2 * BLOCK_SIZE]
@@ -110,6 +110,7 @@ POINTS = {
     2: 100,
     3: 300,
     4: 1200,
+    5: 6000,  # added to support user created blocks later
 }
 
 

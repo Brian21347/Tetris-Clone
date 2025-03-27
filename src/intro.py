@@ -1,5 +1,6 @@
 import pygame
 from constants import *
+from util import add_vectors, scale_vector
 
 
 class Intro:
@@ -23,6 +24,7 @@ class Intro:
                     raise GameExit
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button in [pygame.BUTTON_LEFT, pygame.BUTTON_MIDDLE, pygame.BUTTON_RIGHT]:
+                        # just go to the main game loop if any mouse button was pressed
                         return
             self.draw()
     
@@ -30,17 +32,11 @@ class Intro:
         self.screen.fill(BG_COLOR)
         self.screen.blit(
             self.title_text,
-            [
-                TITLE_CENTER_POSITION[0] - self.title_text.get_width() / 2,
-                TITLE_CENTER_POSITION[1] - self.title_text.get_height() / 2,
-            ]
+            add_vectors(TITLE_CENTER_POSITION, scale_vector(self.title_text.get_size(), -1/2))
         )
 
         self.screen.blit(
             self.start_text,
-            [
-                START_PROMPT_CENTER_POSITION[0] - self.start_text.get_width() / 2,
-                START_PROMPT_CENTER_POSITION[1] - self.start_text.get_height() / 2,
-            ]
+            add_vectors(START_PROMPT_CENTER_POSITION, scale_vector(self.start_text.get_size(), -1/2))
         )
         pygame.display.flip()

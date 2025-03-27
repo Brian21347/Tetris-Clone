@@ -14,19 +14,17 @@ class BlockGroup(pygame.sprite.Group):
         
         # removal
         blocks_by_line: defaultdict[int, list[Block]] = defaultdict(list)
-        for sprite in self.sprites():
-            blocks_by_line[sprite.position[1]].append(sprite)
+        for sprite in self.sprites(): blocks_by_line[sprite.position[1]].append(sprite)
         removed_lines = set()
         for i, blocks in blocks_by_line.items():
-            if len(blocks) == BLOCKS_TO_CLEAR_LINE:
-                removed_lines.add(i)
-                line_clears += 1
-                [block.kill() for block in blocks]
+            if len(blocks) != BLOCKS_TO_CLEAR_LINE: continue
+            removed_lines.add(i)
+            line_clears += 1
+            [block.kill() for block in blocks]
 
         # movement
         blocks_by_line: defaultdict[int, list[Block]] = defaultdict(list)
-        for sprite in self.sprites():
-            blocks_by_line[sprite.position[1]].append(sprite)
+        for sprite in self.sprites(): blocks_by_line[sprite.position[1]].append(sprite)
         for i in removed_lines:
             for j, blocks in blocks_by_line.items():
                 if j > i: continue

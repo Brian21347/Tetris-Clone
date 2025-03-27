@@ -39,18 +39,16 @@ class VolumeButton:
     
     @property
     def speaker_icon(self):
-        if self.volume <= VOLUME_CLAMP or self.muted:
-            return self.muted_speaker
-        if self.volume < .5:
-            return self.semi_speaker
+        if self.volume <= VOLUME_CLAMP or self.muted: return self.muted_speaker
+        if self.volume < .5: return self.semi_speaker
         return self.full_speaker
 
     def update(self, event: pygame.event.EventType):
         x, y = pygame.mouse.get_pos()
-        if self.position[0] < x - VOLUME_BUTTON_BAR_OFFSET < self.position[0] + self.size[0] + \
-            (self.expand_rect[0] + VOLUME_BUTTON_CIRCLE_RADIUS if self.fill_percent != 0 else 0) \
+        end_x_position = self.position[0] + self.size[0] + \
+            (self.expand_rect[0] + VOLUME_BUTTON_CIRCLE_RADIUS if self.fill_percent != 0 else 0) + 10
+        if self.position[0] < x - VOLUME_BUTTON_BAR_OFFSET < end_x_position \
             and self.position[1] < y < self.position[1] + self.size[1]:
-
             if self.__start_hover is None:
                 self.__start_hover = pygame.time.get_ticks()
             self.__leave = None
@@ -61,8 +59,7 @@ class VolumeButton:
         if pygame.mouse.get_pressed()[0]:
             if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
                 self.muted = not self.muted
-            if self.position[0] + self.size[0] < x - VOLUME_BUTTON_BAR_OFFSET < self.position[0] + self.size[0] + \
-                (self.expand_rect[0] if self.fill_percent != 0 else 0) \
+            if self.position[0] + self.size[0] < x - VOLUME_BUTTON_BAR_OFFSET < end_x_position \
                 and self.position[1] < y < self.position[1] + self.size[1]:
                 
                 self.volume = (x - self.position[0] - self.size[0] - VOLUME_BUTTON_BAR_OFFSET) / self.expand_rect[0]
@@ -72,9 +69,16 @@ class VolumeButton:
     
     @property
     def fill_percent(self):
+        curr_time = pygame.time.get_ticks()
         if self.__start_hover is None: 
-            return (VOLUME_BUTTON_DELAY - x) / VOLUME_BUTTON_DELAY if 0 < (x := pygame.time.get_ticks() - self.__leave) < VOLUME_BUTTON_DELAY else 0
-        return x / VOLUME_BUTTON_DELAY if (x := pygame.time.get_ticks() - self.__start_hover - VOLUME_BUTTON_HOVER_DELAY) < VOLUME_BUTTON_DELAY else 1
+            time_diff = curr_time - self.__leave
+            if time_diff < VOLUME_BUTTON_DELAY:
+                return (VOLUME_BUTTON_DELAY - time_diff) / VOLUME_BUTTON_DELAY
+            return 0
+        time_diff = curr_time - self.__start_hover - VOLUME_BUTTON_HOVER_DELAY
+        if time_diff < VOLUME_BUTTON_DELAY:
+            return time_diff / VOLUME_BUTTON_DELAY
+        return 1 
     
     def draw(self):
         if self.fill_center and self.border_width > 0:
@@ -96,7 +100,3 @@ class VolumeButton:
             ], 
             VOLUME_BUTTON_CIRCLE_RADIUS
         )
-
-def main():
-    format()
-

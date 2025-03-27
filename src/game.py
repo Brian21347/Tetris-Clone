@@ -28,7 +28,10 @@ class Game:
         self.draw_grid(HOLD_GRID_START, HOLD_GRID_SIZE)
         self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
         for y in range(UPCOMING_NUMBER):
-            self.draw_grid([UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + (UPCOMING_GAP_SIZE + UPCOMING_GRID_HIGHT) * y], [4 * BLOCK_SIZE, 2 * BLOCK_SIZE])
+            self.draw_grid(
+                [UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + (UPCOMING_GAP_SIZE + UPCOMING_GRID_HIGHT) * y], 
+                [4 * BLOCK_SIZE, 2 * BLOCK_SIZE]
+            )
 
         self.queue: list[TetrisBlock] = []
         self.add_to_queue()
@@ -140,7 +143,7 @@ class Game:
 
     def show_preview(self) -> None:
         preview_block = self.controlled_block.clone()
-        preview_block.hard_drop(kill=False)
+        preview_block.hard_drop(do_kill=False)
         controlled_block_positions = [
             controlled_block_sprite.position for controlled_block_sprite in self.controlled_block.sprites()
         ]
@@ -185,7 +188,8 @@ class Game:
             self.queue.append(
                 TetrisBlock(
                     self.screen, block_id, self.obstacle_group, 
-                    x_offset=UPCOMING_GRID_START[0], y_offset=UPCOMING_GRID_START[1] + (len(self.queue)) * (UPCOMING_GRID_HIGHT + UPCOMING_GAP_SIZE)
+                    x_offset=UPCOMING_GRID_START[0], 
+                    y_offset=UPCOMING_GRID_START[1] + len(self.queue) * (UPCOMING_GRID_HIGHT + UPCOMING_GAP_SIZE)
                 ) 
             )
 
