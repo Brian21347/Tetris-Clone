@@ -71,6 +71,7 @@ class VolumeButton:
     def fill_percent(self):
         curr_time = pygame.time.get_ticks()
         if self.__start_hover is None: 
+            assert self.__leave is not None
             time_diff = curr_time - self.__leave
             if time_diff < VOLUME_BUTTON_DELAY:
                 return (VOLUME_BUTTON_DELAY - time_diff) / VOLUME_BUTTON_DELAY

@@ -10,7 +10,7 @@ from textBox import TextBox
 
 
 class Game:
-    held: TetrisBlock = None
+    held: TetrisBlock | None = None
     just_held: bool = False
     
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
@@ -29,8 +29,8 @@ class Game:
         self.draw_grid(FIELD_GRID_START, FIELD_GRID_SIZE)
         for y in range(UPCOMING_NUMBER):
             self.draw_grid(
-                [UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + (UPCOMING_GAP_SIZE + UPCOMING_GRID_HIGHT) * y], 
-                [4 * BLOCK_SIZE, 2 * BLOCK_SIZE]
+                (UPCOMING_GRID_START[0], UPCOMING_GRID_START[1] + (UPCOMING_GAP_SIZE + UPCOMING_GRID_HIGHT) * y), 
+                (4 * BLOCK_SIZE, 2 * BLOCK_SIZE)
             )
 
         self.queue: list[TetrisBlock] = []
@@ -95,8 +95,8 @@ class Game:
                         raise GameExit
                     if event.key == pygame.K_c and not self.just_held:
                         self.hold()
-                self.score += self.controlled_block.update(event)
-                if self.held is not None: self.held.update(event)
+                self.score += self.controlled_block.update_block(event)
+                if self.held is not None: self.held.update_block(event)
 
                 self.volume_button.update(event)
                 pygame.mixer.music.set_volume(self.volume_button.get_volume())
@@ -114,13 +114,13 @@ class Game:
                     return self.score
             self.draw()
 
-    def add_block(self) -> None:
+    def add_block(self) -> bool:
         self.just_held = False
         self.controlled_block.add_block(self.queue.pop(0).block_id)
         if self.controlled_block.collides(): 
             return False
         for sprite in self.queue:
-            sprite.move([0, -UPCOMING_GRID_HIGHT - UPCOMING_GAP_SIZE])
+            sprite.move((0, -UPCOMING_GRID_HIGHT - UPCOMING_GAP_SIZE))
         if len(self.queue) <= 7:
             self.add_to_queue()
         line_clears = self.obstacle_group.check_lines()
@@ -148,11 +148,11 @@ class Game:
             controlled_block_sprite.position for controlled_block_sprite in self.controlled_block.sprites()
         ]
         for sprite in preview_block.sprites():
+            sprite: Block
             if sprite.position in controlled_block_positions:
                 continue
-            sprite: Block
             img = self.controlled_block.sprites()[0].image
-            rect = pygame.rect.Rect(*sprite.rect.topleft, BLOCK_SIZE, BLOCK_SIZE)
+            rect = pygame.rect.Rect(*sprite.rect.topleft, BLOCK_SIZE, BLOCK_SIZE)  # type: ignore
             pygame.draw.rect(self.screen, img.get_at([0, 0]), rect, BLOCK_OUTLINE_SIZE)
 
     def draw(self) -> None:

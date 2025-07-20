@@ -32,5 +32,5 @@ class BlockGroup(pygame.sprite.Group):
         
         return line_clears
     
-    def draw(self):
-        super().draw(self.screen)
+    def draw(self, *args, **kwargs):
+        return super().draw(self.screen)

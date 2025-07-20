@@ -9,7 +9,6 @@
 # TODO: allow the users to choose their control settings
 
 import pygame
-import pygame.locals
 from intro import Intro
 from game import Game
 from outro import Outro
@@ -20,7 +19,6 @@ from constants import *
 # pygame init
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE, pygame.RESIZABLE)
-screen.set_alpha()
 pygame.display.set_caption("Tetris Clone")
 image = pygame.image.load(LOGO_PATH)
 pygame.display.set_icon(image)

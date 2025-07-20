@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from util import add_vectors, scale_vector
+from util import add_pii, scale_pii
 
 class TextBox:
     def __init__(
@@ -25,5 +25,5 @@ class TextBox:
         text = self.font.render(self.text, True, self.text_color)
         self.screen.blit(
             text, 
-            add_vectors(self.position, scale_vector(self.size, 1/2), scale_vector(text.get_size(), -1/2))
+            add_pii(self.position, scale_pii(self.size, 1/2), scale_pii(text.get_size(), -1/2))
         )

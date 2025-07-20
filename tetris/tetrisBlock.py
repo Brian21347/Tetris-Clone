@@ -3,10 +3,10 @@ from constants import *
 from blockGroup import BlockGroup
 from block import Block
 from math import sin, cos, pi
-from util import add_vectors, scale_vector
+from util import add_pii, scale_pii
 
 
-BlockId = tuple[tuple[Pii], Pii]
+BlockId = tuple[Pii, ...]
 
 
 class TetrisBlock(BlockGroup):
@@ -52,7 +52,7 @@ class TetrisBlock(BlockGroup):
         if not x_offset:
             # the x offset is: (⌊the middle of the grid / block size⌋ - x position of block second value) * block size
             x_offset = (
-                (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] / 2) //
+                (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] // 2) //
                 BLOCK_SIZE - TetrisBlock.BLOCKS[block_id][1][0] - 1
             ) * BLOCK_SIZE
         if not y_offset: y_offset = FIELD_GRID_START[1]
@@ -60,7 +60,7 @@ class TetrisBlock(BlockGroup):
 
         blocks = [
             Block(
-                add_vectors(scale_vector(block, BLOCK_SIZE), (x_offset, y_offset)),
+                add_pii(scale_pii(block, BLOCK_SIZE), (x_offset, y_offset)),
                 IMAGE_ASSET_PATH % block_id
             )
             for block in TetrisBlock.BLOCKS[block_id]
@@ -72,12 +72,12 @@ class TetrisBlock(BlockGroup):
         movement_time = INITIAL_MOVEMENT_TIME / (LINE_CLEAR_SPEED_UP * (self.line_clears // 10) + 1)
         if pygame.time.get_ticks() - self.previous_time > movement_time: self.move_down()
 
-    def update(self, event: pygame.event.EventType) -> int:
-        if not self.__player_controlled: return
+    def update_block(self, event: pygame.event.EventType) -> int:
+        if not self.__player_controlled: return 0
         score_bonus = 0
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE: score_bonus += self.hard_drop()
-            direction: Pii = None
+            direction: Pii | None = None
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 direction = -BLOCK_SIZE, 0
             elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -158,7 +158,7 @@ class TetrisBlock(BlockGroup):
             raise ValueError("Block Id is not valid.")
         self.block_id = block_id
         x_offset = (
-            (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] / 2) //
+            (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] // 2) //
             BLOCK_SIZE - TetrisBlock.BLOCKS[block_id][1][0] - 1
         ) * BLOCK_SIZE
         y_offset = FIELD_GRID_START[1]

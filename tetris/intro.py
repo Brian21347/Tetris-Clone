@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from util import add_vectors, scale_vector
+from util import add_pii, scale_pii
 
 
 class Intro:
@@ -32,11 +32,11 @@ class Intro:
         self.screen.fill(BG_COLOR)
         self.screen.blit(
             self.title_text,
-            add_vectors(TITLE_CENTER_POSITION, scale_vector(self.title_text.get_size(), -1/2))
+            add_pii(TITLE_CENTER_POSITION, scale_pii(self.title_text.get_size(), -1/2))
         )
 
         self.screen.blit(
             self.start_text,
-            add_vectors(START_PROMPT_CENTER_POSITION, scale_vector(self.start_text.get_size(), -1/2))
+            add_pii(START_PROMPT_CENTER_POSITION, scale_pii(self.start_text.get_size(), -1/2))
         )
         pygame.display.flip()

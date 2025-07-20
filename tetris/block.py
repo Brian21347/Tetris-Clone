@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from util import add_vectors
+from util import add_pii
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, position: Pii, image_path: str) -> None:
@@ -14,7 +14,7 @@ class Block(pygame.sprite.Sprite):
         self.move((0, BLOCK_SIZE))
     
     def move(self, direction: Pii):
-        self.position = add_vectors(self.rect.topleft, direction)
+        self.position = add_pii(self.rect.topleft, direction)
         self.rect.topleft = self.position
     
     def set_position(self, position: Pii):

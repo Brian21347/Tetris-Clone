@@ -4,12 +4,12 @@ A collection of helper functions.
 from constants import Pii
 
 
-def add_vectors(*args: tuple[Pii, ...]) -> Pii:
-    sum_vec = [0] * len(args[0])
+def add_pii(*args: Pii) -> Pii:
+    sum_vec = (0, 0)
     for vec in args:
-        sum_vec = [val1 + val2 for val1, val2 in zip(vec, sum_vec, strict=True)]
+        sum_vec = sum_vec[0] + vec[0], sum_vec[1] + vec[1]
     return sum_vec
 
 
-def scale_vector(vector: Pii, scale_factor) -> Pii:
-    return [val * scale_factor for val in vector]
+def scale_pii(vector: Pii, scale_factor) -> Pii:
+    return tuple(val * scale_factor for val in vector)
