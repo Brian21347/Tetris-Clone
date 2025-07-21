@@ -16,19 +16,19 @@ VOLUME_BUTTON_MUTED: str = "Speaker 3.png"
 
 BG_COLOR: str = "light gray"
 FRAME_RATE: int = 100
-BLOCK_SIZE: int = 25
+BLOCK_SIZE: int = 50
 Pii = tuple[int, int]
 SCREEN_WIDTH: int = BLOCK_SIZE * 20
 SCREEN_HEIGHT: int = BLOCK_SIZE * 26
 SCREEN_SIZE: Pii = (SCREEN_WIDTH, SCREEN_HEIGHT)
 FONT: str = "Roboto"
-TEXT_SIZE: int = 30
+TEXT_SIZE: int = 50
 
 # intro config
 TITLE_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 2 * BLOCK_SIZE)
 TITLE: str = "A Tetris Clone"
 TITLE_TEXT_COLOR: str = "black"
-TITLE_SIZE: int = 60
+TITLE_SIZE: int = 80
 
 START_PROMPT_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 3 * BLOCK_SIZE)
 START_PROMPT_TEXT: str = "Click anywhere to start!"
@@ -39,7 +39,7 @@ COVER_SCREEN_TRANSPARENCY: int = 125  # this is out of 255
 COVER_SCREEN_COLOR: str = "gray"
 
 GAME_OVER_PROMPT_TEXT: str = "Game over"
-GAME_OVER_SIZE: int = 60
+GAME_OVER_SIZE: int = 80
 GAME_OVER_TEXT_COLOR: str = "black"
 GAME_OVER_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - BLOCK_SIZE)
 
@@ -52,7 +52,7 @@ GRID_COLOR: str = "black"
 DELAY: int = 200
 INTERVAL: int = 100
 
-BLOCK_OUTLINE_SIZE: int = 5
+BLOCK_OUTLINE_SIZE: int = 8
 
 
 HOLD_GRID_START: Pii = (BLOCK_SIZE // 2, 3 * BLOCK_SIZE // 2)
@@ -63,6 +63,8 @@ FIELD_GRID_SIZE: Pii = (10 * BLOCK_SIZE, 24 * BLOCK_SIZE)
 
 UPCOMING_GRID_START: Pii = (31 * BLOCK_SIZE // 2, 3 * BLOCK_SIZE // 2)
 UPCOMING_GRID_HIGHT: int = BLOCK_SIZE * 2
+GRID_LINE_WIDTH: int = 3
+
 UPCOMING_GAP_SIZE: int = int(0.5 * BLOCK_SIZE)
 UPCOMING_NUMBER: int = 5
 
@@ -103,7 +105,7 @@ TEXT_BUTTON_SIZE: Pii = (3 * BLOCK_SIZE, BLOCK_SIZE)
 TEXT_BUTTON_TEXTS: list[str] = ["Held", "Next", "Score", "Level", "Lines"]
 TEXT_BUTTON_TEXT_COLOR: str = "black"
 
-SCORE_COLOR: str = "dark gray"
+SCORE_COLOR: str = "#515151"
 SCORE_STARTS: list[Pii] = [
     (BLOCK_SIZE, 17 * BLOCK_SIZE // 2),
     (BLOCK_SIZE, 21 * BLOCK_SIZE // 2),

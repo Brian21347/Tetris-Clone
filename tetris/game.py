@@ -2,7 +2,7 @@ import pygame
 from blockGroup import BlockGroup
 from tetrisBlock import TetrisBlock
 from block import Block
-from random import shuffle
+from random import shuffle, randint
 from constants import *
 from volumeButton import VolumeButton
 from switchButton import SwitchButton
@@ -15,7 +15,12 @@ class Game(Screen):
         super().__init__()
         self.screen = pygame.display.get_surface()
         self.obstacle_group = BlockGroup(self.screen)
-        self.controlled_block = TetrisBlock(self.screen, 7, self.obstacle_group)
+
+        self.queue: list[TetrisBlock] = []
+        self.add_to_queue()
+        self.add_to_queue()
+        self.controlled_block = TetrisBlock(self.screen, randint(1, 7), self.obstacle_group)
+        self.controlled_block.controlled()
 
         self.grid_screen = pygame.surface.Surface(SCREEN_SIZE).convert_alpha()
         self.grid_screen.fill([0, 0, 0, 0])
@@ -30,13 +35,8 @@ class Game(Screen):
                 (4 * BLOCK_SIZE, 2 * BLOCK_SIZE),
             )
 
-        self.queue: list[TetrisBlock] = []
-        self.add_to_queue()
-        self.add_to_queue()
-        self.controlled_block.controlled()
-
         self.score = 0
-        self.font = pygame.font.SysFont("Roboto", 30)
+        self.font = pygame.font.SysFont(FONT, TEXT_SIZE)
 
         self.switch_button = SwitchButton(
             self.screen,
@@ -147,8 +147,8 @@ class Game(Screen):
 
         line_clears = self.controlled_block.line_clears
         score_texts = [
-            self.font.render(text, True, SCORE_COLOR)
-            for text in [f"{self.score:,}", f"{int(line_clears // 10):,}", f"{line_clears:,}"]
+            self.font.render(str(text), True, SCORE_COLOR)
+            for text in [self.score, line_clears // 10, line_clears]
         ]
         for text, start_pos in zip(score_texts, SCORE_STARTS):
             self.screen.blit(
@@ -159,10 +159,9 @@ class Game(Screen):
                 ],
             )
 
-        if (
-            not self.controlled_block.sprites() and not self.add_block()
-        ):  # check if the block was placed
-            pygame.mixer.music.fadeout(1)
+        # block cannot be loaded, loss
+        if not self.controlled_block.sprites() and not self.add_block():
+            pygame.mixer.music.stop()
             self.hide()
             self.send_action(Action.hide)
 
@@ -207,6 +206,7 @@ class Game(Screen):
                 GRID_COLOR,
                 (x, starting_position[1]),
                 (x, starting_position[1] + size[1]),
+                GRID_LINE_WIDTH,
             )
         for y in range(0, size[1] + 1, BLOCK_SIZE):
             y += starting_position[1]
@@ -215,4 +215,5 @@ class Game(Screen):
                 GRID_COLOR,
                 (starting_position[0], y),
                 (starting_position[0] + size[0], y),
+                GRID_LINE_WIDTH,
             )

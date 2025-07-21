@@ -29,7 +29,7 @@ class SwitchButton:
         self.border_radius = border_radius
         self.fill_center = fill_center
 
-        self.font = pygame.font.SysFont("Roboto", 30)
+        self.font = pygame.font.SysFont(FONT, TEXT_SIZE)
         self.rect = pygame.rect.Rect(self.position, self.size)
 
         self.current_text_index = 0

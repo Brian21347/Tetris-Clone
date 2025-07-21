@@ -19,7 +19,7 @@ class TextBox:
         self.text = text
         self.text_color = text_color
 
-        self.font = pygame.font.SysFont("Roboto", 30)
+        self.font = pygame.font.SysFont(FONT, TEXT_SIZE)
         self.rect = pygame.rect.Rect(self.position, self.size)
 
     def draw(self):
