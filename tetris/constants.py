@@ -1,4 +1,3 @@
-from os.path import join as join_path
 from enum import Enum
 
 
@@ -7,12 +6,12 @@ class Action(Enum):
 
 
 # region: asset paths
-LOGO_PATH: str = join_path("tetris", "Assets", "images", "Logo.png")
-IMAGE_ASSET_PATH: str = join_path("tetris", "Assets", "images", "Tetris block %s.png")
-THEME_ASSET_PATH: str = join_path("tetris", "Assets", "themes", "%s.mp3")
-VOLUME_BUTTON_FULL: str = join_path("tetris", "Assets", "images", "Speaker 1.png")
-VOLUME_BUTTON_SEMI: str = join_path("tetris", "Assets", "images", "Speaker 2.png")
-VOLUME_BUTTON_MUTED: str = join_path("tetris", "Assets", "images", "Speaker 3.png")
+LOGO_PATH: str = "Logo.png"
+IMAGE_ASSET_PATH: str = "Tetris block %s.png"
+THEME_ASSET_PATH: str = "%s.mp3"
+VOLUME_BUTTON_FULL: str = "Speaker 1.png"
+VOLUME_BUTTON_SEMI: str = "Speaker 2.png"
+VOLUME_BUTTON_MUTED: str = "Speaker 3.png"
 # endregion
 
 BG_COLOR: str = "light gray"

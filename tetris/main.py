@@ -8,6 +8,7 @@
 # TODO: fix the rotation bugs where blocks move left or right in the air due to repeat rotation
 # TODO: allow the users to choose their control settings
 
+import asyncio
 import pygame
 import sys
 from typing import NoReturn
@@ -51,7 +52,7 @@ def screen_controller(group: ScreenGroup, updated_screen: Screen, action: Action
 screens = ScreenGroup({Intro()}, screen_controller)
 
 
-def main() -> NoReturn:
+async def main() -> NoReturn:
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -66,7 +67,8 @@ def main() -> NoReturn:
         screens.draw()
         pygame.display.flip()
         clock.tick(FRAME_RATE)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
