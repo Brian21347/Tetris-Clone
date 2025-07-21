@@ -15,68 +15,90 @@ class TetrisBlock(BlockGroup):
 
     BLOCKS: dict[int, BlockId] = {
         1: (  # z block
-            (0, 0), (1, 0), (1, 1), (2, 1),
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (2, 1),
         ),
         2: (  # reverse z block
-            (0, 1), (1, 0), (1, 1), (2, 0),
+            (0, 1),
+            (1, 0),
+            (1, 1),
+            (2, 0),
         ),
         3: (  # reverse l block
-            (0, 0), (1, 1), (0, 1), (2, 1),
+            (0, 0),
+            (1, 1),
+            (0, 1),
+            (2, 1),
         ),
         4: (  # l block
-            (0, 1), (1, 1), (2, 1), (2, 0),
+            (0, 1),
+            (1, 1),
+            (2, 1),
+            (2, 0),
         ),
         5: (  # t block
-            (0, 1), (1, 1), (1, 0), (2, 1),
+            (0, 1),
+            (1, 1),
+            (1, 0),
+            (2, 1),
         ),
         6: (  # line block
-            (0, 0), (1, 0), (2, 0), (3, 0),
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (3, 0),
         ),
         7: (  # square block
-            (0, 0), (0, 1), (1, 1), (1, 0),
-        )
+            (0, 0),
+            (0, 1),
+            (1, 1),
+            (1, 0),
+        ),
     }
 
     def __init__(
-            self, 
-            screen: pygame.Surface, 
-            block_id: int, 
-            obstacle_group: BlockGroup, 
-            x_offset=None, 
-            y_offset=None
-        ) -> None:
-        if block_id not in TetrisBlock.BLOCKS: raise ValueError("Block Id is not valid.")
+        self,
+        screen: pygame.Surface,
+        block_id: int,
+        obstacle_group: BlockGroup,
+        x_offset=None,
+        y_offset=None,
+    ) -> None:
+        if block_id not in TetrisBlock.BLOCKS:
+            raise ValueError("Block Id is not valid.")
         self.obstacle_group = obstacle_group
         self.block_id = block_id
 
         if not x_offset:
             # the x offset is: (⌊the middle of the grid / block size⌋ - x position of block second value) * block size
             x_offset = (
-                (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] // 2) //
-                BLOCK_SIZE - TetrisBlock.BLOCKS[block_id][1][0] - 1
+                (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] // 2) // BLOCK_SIZE
+                - TetrisBlock.BLOCKS[block_id][1][0]
+                - 1
             ) * BLOCK_SIZE
-        if not y_offset: y_offset = FIELD_GRID_START[1]
+        if not y_offset:
+            y_offset = FIELD_GRID_START[1]
         self.previous_time: int = pygame.time.get_ticks()
 
         blocks = [
             Block(
                 add_pii(scale_pii(block, BLOCK_SIZE), (x_offset, y_offset)),
-                IMAGE_ASSET_PATH % block_id
+                IMAGE_ASSET_PATH % block_id,
             )
             for block in TetrisBlock.BLOCKS[block_id]
         ]
 
         super().__init__(screen, *(blocks))
 
-    def check_move_down(self):
-        movement_time = INITIAL_MOVEMENT_TIME / (LINE_CLEAR_SPEED_UP * (self.line_clears // 10) + 1)
-        if pygame.time.get_ticks() - self.previous_time > movement_time: self.move_down()
-
-    def update_block(self, event: pygame.event.EventType) -> int:
-        if not self.__player_controlled: return 0
+    def update_block(self, event: pygame.event.Event) -> int:
+        if not self.__player_controlled:
+            return 0
         score_bonus = 0
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE: score_bonus += self.hard_drop()
+            if event.key == pygame.K_SPACE:
+                score_bonus += self.hard_drop()
             direction: Pii | None = None
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 direction = -BLOCK_SIZE, 0
@@ -89,12 +111,14 @@ class TetrisBlock(BlockGroup):
             elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.move_down()
                 score_bonus += 1
-            if direction is not None: self.checked_move(direction)
+            if direction is not None:
+                self.checked_move(direction)
         return score_bonus
 
     def hard_drop(self, do_kill=True) -> int:
         score_bonus = 0
-        while self.move_down(do_kill): score_bonus += 1
+        while self.move_down(do_kill):
+            score_bonus += 1
         return score_bonus
 
     def checked_move(self, direction: Pii):
@@ -136,8 +160,10 @@ class TetrisBlock(BlockGroup):
 
     def collides(self) -> bool:
         for sprite in self.sprites():
-            if (sprite.position[0] < FIELD_GRID_START[0] or
-                    sprite.position[0] >= FIELD_GRID_START[0] + FIELD_GRID_SIZE[0]):
+            if (
+                sprite.position[0] < FIELD_GRID_START[0]
+                or sprite.position[0] >= FIELD_GRID_START[0] + FIELD_GRID_SIZE[0]
+            ):
                 return True
             if sprite.position[1] >= FIELD_GRID_START[1] + FIELD_GRID_SIZE[1]:
                 return True
@@ -158,31 +184,39 @@ class TetrisBlock(BlockGroup):
             raise ValueError("Block Id is not valid.")
         self.block_id = block_id
         x_offset = (
-            (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] // 2) //
-            BLOCK_SIZE - TetrisBlock.BLOCKS[block_id][1][0] - 1
+            (FIELD_GRID_START[0] + FIELD_GRID_SIZE[0] // 2) // BLOCK_SIZE
+            - TetrisBlock.BLOCKS[block_id][1][0]
+            - 1
         ) * BLOCK_SIZE
         y_offset = FIELD_GRID_START[1]
         self.previous_time: int = pygame.time.get_ticks()
         super().add(
-            *(Block(
-                (block[0] * BLOCK_SIZE + x_offset,
-                 block[1] * BLOCK_SIZE + y_offset),
-                IMAGE_ASSET_PATH % block_id
+            *(
+                Block(
+                    (block[0] * BLOCK_SIZE + x_offset, block[1] * BLOCK_SIZE + y_offset),
+                    IMAGE_ASSET_PATH % block_id,
+                )
+                for block in TetrisBlock.BLOCKS[block_id]
             )
-                for block in TetrisBlock.BLOCKS[block_id])
         )
+
+    def check_move_down(self):
+        movement_time = INITIAL_MOVEMENT_TIME / (LINE_CLEAR_SPEED_UP * (self.line_clears // 10) + 1)
+        if pygame.time.get_ticks() - self.previous_time > movement_time:
+            self.move_down()
 
     def move_down(self, do_kill=True) -> bool:
         self.previous_time = pygame.time.get_ticks()
         self.move((0, BLOCK_SIZE))
         if self.collides():
             self.move((0, -BLOCK_SIZE))
-            if do_kill: self.add_sprites_to(self.obstacle_group)
+            if do_kill:
+                self.add_sprites_to(self.obstacle_group)
             return False
         return True
 
-    def clone(self) -> 'TetrisBlock':
-        cloned =  TetrisBlock(self.screen, self.block_id, self.obstacle_group)
+    def clone(self) -> "TetrisBlock":
+        cloned = TetrisBlock(self.screen, self.block_id, self.obstacle_group)
         cloned.empty()
         for sprite in self.sprites():
             cloned.add_internal(Block(sprite.rect.topleft, IMAGE_ASSET_PATH % self.block_id))
