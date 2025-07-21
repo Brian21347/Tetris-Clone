@@ -2,6 +2,17 @@ import pygame
 from constants import *
 
 
+FULL_SPEAKER = pygame.transform.scale(
+    pygame.image.load(VOLUME_BUTTON_FULL), VOLUME_BUTTON_SPEAKER_SIZE
+)
+SEMI_SPEAKER = pygame.transform.scale(
+    pygame.image.load(VOLUME_BUTTON_SEMI), VOLUME_BUTTON_SPEAKER_SIZE
+)
+MUTED_SPEAKER = pygame.transform.scale(
+    pygame.image.load(VOLUME_BUTTON_MUTED), VOLUME_BUTTON_SPEAKER_SIZE
+)
+
+
 class VolumeButton:
     def __init__(
         self,
@@ -27,15 +38,9 @@ class VolumeButton:
         self.border_radius = border_radius
         self.fill_center = fill_center
 
-        self.full_speaker = pygame.transform.scale(
-            pygame.image.load(VOLUME_BUTTON_FULL), VOLUME_BUTTON_SPEAKER_SIZE
-        )
-        self.semi_speaker = pygame.transform.scale(
-            pygame.image.load(VOLUME_BUTTON_SEMI), VOLUME_BUTTON_SPEAKER_SIZE
-        )
-        self.muted_speaker = pygame.transform.scale(
-            pygame.image.load(VOLUME_BUTTON_MUTED), VOLUME_BUTTON_SPEAKER_SIZE
-        )
+        self.full_speaker = FULL_SPEAKER
+        self.semi_speaker = SEMI_SPEAKER
+        self.muted_speaker = MUTED_SPEAKER
 
         self.muted = False
         self.rect = pygame.rect.Rect(self.position, self.size)

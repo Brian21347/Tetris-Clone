@@ -3,11 +3,17 @@ from constants import *
 from util import add_pii
 
 
+IMAGES = {
+    i: pygame.transform.scale(pygame.image.load(IMAGE_ASSET_PATH % i), [BLOCK_SIZE, BLOCK_SIZE])
+    for i in range(1, 8)
+}
+
+
 class Block(pygame.sprite.Sprite):
-    def __init__(self, position: Pii, image_path: str) -> None:
+    def __init__(self, position: Pii, block_id: int) -> None:
         super().__init__()
         self.position = position
-        self.image = pygame.transform.scale(pygame.image.load(image_path), [BLOCK_SIZE, BLOCK_SIZE])
+        self.image = IMAGES[block_id]
         self.rect = self.image.get_rect()
         self.rect.topleft = self.position
 

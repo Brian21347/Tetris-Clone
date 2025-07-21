@@ -85,7 +85,7 @@ class TetrisBlock(BlockGroup):
         blocks = [
             Block(
                 add_pii(scale_pii(block, BLOCK_SIZE), (x_offset, y_offset)),
-                IMAGE_ASSET_PATH % block_id,
+                block_id,
             )
             for block in TetrisBlock.BLOCKS[block_id]
         ]
@@ -194,7 +194,7 @@ class TetrisBlock(BlockGroup):
             *(
                 Block(
                     (block[0] * BLOCK_SIZE + x_offset, block[1] * BLOCK_SIZE + y_offset),
-                    IMAGE_ASSET_PATH % block_id,
+                    block_id,
                 )
                 for block in TetrisBlock.BLOCKS[block_id]
             )
@@ -219,5 +219,5 @@ class TetrisBlock(BlockGroup):
         cloned = TetrisBlock(self.screen, self.block_id, self.obstacle_group)
         cloned.empty()
         for sprite in self.sprites():
-            cloned.add_internal(Block(sprite.rect.topleft, IMAGE_ASSET_PATH % self.block_id))
+            cloned.add_internal(Block(sprite.rect.topleft, self.block_id))
         return cloned

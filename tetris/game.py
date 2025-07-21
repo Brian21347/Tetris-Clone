@@ -83,37 +83,6 @@ class Game(Screen):
         self.__held: TetrisBlock | None = None
         self.__just_held = False
 
-    # def loop(self) -> int:
-    #     while True:
-    #         for event in pygame.event.get():
-    #             if event.type == pygame.QUIT:
-    #                 pygame.quit()
-    #                 raise GameExit
-    #             if event.type == pygame.KEYDOWN:
-    #                 if event.key == pygame.K_ESCAPE:
-    #                     pygame.quit()
-    #                     raise GameExit
-    #                 if event.key == pygame.K_c and not self.just_held:
-    #                     self.hold()
-    #             self.score += self.controlled_block.update_block(event)
-    #             if self.held is not None: self.held.update_block(event)
-
-    #             self.volume_button.update(event)
-    #             pygame.mixer.music.set_volume(self.volume_button.get_volume())
-
-    #             self.switch_button.update(event)
-    #             if self.switch_button.get_displayed_text() != self.theme:
-    #                 self.theme = self.switch_button.get_displayed_text()
-    #                 pygame.mixer.music.load(THEME_ASSET_PATH % self.theme)
-    #                 pygame.mixer.music.play(-1)  # play infinitely
-    #         self.controlled_block.check_move_down()
-
-    #         if not self.controlled_block.sprites():  # check if the block was placed
-    #             if not self.add_block():
-    #                 pygame.mixer.music.fadeout(1)
-    #                 return self.score
-    #         self.draw()
-
     def add_block(self) -> bool:
         self.__just_held = False
         self.controlled_block.add_block(self.queue.pop(0).block_id)
