@@ -1,22 +1,18 @@
 # Tetris-Clone
 A simple Tetris clone with a changed color palette.
 
-## Dependencies
-* python3
-* pygame
-```
-pip install pygame
-```
-
 ## Installation
-```
+```sh
 git clone https://github.com/Brian21347/Tetris-Clone.git
+```
+```sh
+pip install -r requirements.txt
 ```
 
 ## Usage
-From the `tetris` directory, run the following command:
-```
-python main.py
+From the project's home directory, run the following command:
+```sh
+pygbag tetris
 ```
 Edit the `constants.py` file to change settings. Editing `BLOCK_SIZE` will scale the size of the grid and screen.
 
