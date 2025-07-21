@@ -6,7 +6,15 @@ class Action(Enum):
     hide = "hide"
 
 
+# region: asset paths
 LOGO_PATH: str = join_path("tetris", "Assets", "images", "Logo.png")
+IMAGE_ASSET_PATH: str = join_path("tetris", "Assets", "images", "Tetris block %s.png")
+THEME_ASSET_PATH: str = join_path("tetris", "Assets", "themes", "%s.mp3")
+VOLUME_BUTTON_FULL: str = join_path("tetris", "Assets", "images", "Speaker 1.png")
+VOLUME_BUTTON_SEMI: str = join_path("tetris", "Assets", "images", "Speaker 2.png")
+VOLUME_BUTTON_MUTED: str = join_path("tetris", "Assets", "images", "Speaker 3.png")
+# endregion
+
 BG_COLOR: str = "light gray"
 FRAME_RATE: int = 100
 BLOCK_SIZE: int = 25
@@ -47,8 +55,6 @@ INTERVAL: int = 100
 
 BLOCK_OUTLINE_SIZE: int = 5
 
-IMAGE_ASSET_PATH: str = join_path("tetris", "Assets", "images", "Tetris Block %s.png")
-THEME_ASSET_PATH: str = join_path("tetris", "Assets", "themes", "%s.mp3")
 
 HOLD_GRID_START: Pii = (BLOCK_SIZE // 2, 3 * BLOCK_SIZE // 2)
 HOLD_GRID_SIZE: Pii = (4 * BLOCK_SIZE, 2 * BLOCK_SIZE)
@@ -76,9 +82,6 @@ VOLUME_BUTTON_SIZE: Pii = (3 * BLOCK_SIZE // 2, 3 * BLOCK_SIZE // 2)
 VOLUME_BUTTON_EXPAND_RECT: Pii = (2 * BLOCK_SIZE, 2)
 VOLUME_BUTTON_CIRCLE_RADIUS: int = 5
 VOLUME_BUTTON_STARTING_VOLUME: float = 1
-VOLUME_BUTTON_FULL: str = join_path("tetris", "Assets", "images", "Speaker 1.png")
-VOLUME_BUTTON_SEMI: str = join_path("tetris", "Assets", "images", "Speaker 2.png")
-VOLUME_BUTTON_MUTED: str = join_path("tetris", "Assets", "images", "Speaker 3.png")
 VOLUME_BUTTON_SPEAKER_SIZE: Pii = (BLOCK_SIZE, BLOCK_SIZE)
 VOLUME_BUTTON_BACKGROUND_COLOR: str = "light gray"
 VOLUME_BUTTON_BORDER_COLOR: str = "dark gray"
