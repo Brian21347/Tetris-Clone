@@ -12,10 +12,12 @@ IMAGE_ASSET_PATH: str = join_path("tetris", "Assets", "images", "Tetris block %s
 THEME_ASSET_PATH: str = join_path("tetris", "Assets", "themes", "%s.mp3")
 VOLUME_BUTTON_FULL: str = join_path("tetris", "Assets", "images", "Speaker 1.png")
 VOLUME_BUTTON_SEMI: str = join_path("tetris", "Assets", "images", "Speaker 2.png")
-VOLUME_BUTTON_MUTED: str = join_path("tetris", "Assets", "images", "Speaker 3.png")
+VOLUME_BUTTON_NONE: str = join_path("tetris", "Assets", "images", "Speaker 3.png")
+VOLUME_BUTTON_MUTED: str = join_path("tetris", "Assets", "images", "Speaker 4.png")
 # endregion
 
-BG_COLOR: str = "light gray"
+# region: general config
+BG_COLOR: str = "#c4c4c4"
 FRAME_RATE: int = 100
 BLOCK_SIZE: int = 25
 Pii = tuple[int, int]
@@ -25,31 +27,44 @@ SCREEN_SIZE: Pii = (SCREEN_WIDTH, SCREEN_HEIGHT)
 FONT: str = "Roboto"
 TEXT_SIZE: int = 30
 
+BUTTON_HOVER_DELAY_MS: int = 300
+BUTTON_LEAVE_DELAY_MS: int = 200
+BUTTON_BORDER_SIZE: int = 3
+BUTTON_BORDER_RADIUS: int = 10
+BUTTON_BACKGROUND_COLOR: str = BG_COLOR
+BUTTON_BORDER_COLOR: str = "#707070"
+# endregion
+
 # intro config
-TITLE_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 2 * BLOCK_SIZE)
+TITLE_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 4 * BLOCK_SIZE)
 TITLE: str = "A Tetris Clone"
-TITLE_TEXT_COLOR: str = "black"
-TITLE_SIZE: int = 60
+TITLE_TEXT_COLOR: str = "#000000"
+TITLE_SIZE: int = 80
 
 START_PROMPT_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 3 * BLOCK_SIZE)
-START_PROMPT_TEXT: str = "Click anywhere to start!"
-START_PROMPT_TEXT_COLOR: str = "black"
+START_PROMPT_TEXT: str = "Press enter to start!"
+START_PROMPT_TEXT_COLOR: str = "#000000"
+
+TUTORIAL_BUTTON_START = (SCREEN_WIDTH // 2 - 2 * BLOCK_SIZE, SCREEN_HEIGHT // 2 + 5 * BLOCK_SIZE)
+TUTORIAL_BUTTON_SIZE = (4 * BLOCK_SIZE, 2 * BLOCK_SIZE)
+TUTORIAL_TEXT = "Tutorial"
+TUTORIAL_TEXT_COLOR = "#000000"
 
 # outro config
 COVER_SCREEN_TRANSPARENCY: int = 125  # this is out of 255
-COVER_SCREEN_COLOR: str = "gray"
+COVER_SCREEN_COLOR: str = "#aaaaaa"
 
 GAME_OVER_PROMPT_TEXT: str = "Game over"
 GAME_OVER_SIZE: int = 60
-GAME_OVER_TEXT_COLOR: str = "black"
+GAME_OVER_TEXT_COLOR: str = "#000000"
 GAME_OVER_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - BLOCK_SIZE)
 
 RESTART_PROMPT_TEXT: str = "Click anywhere to play again!"
-RESTART_PROMPT_TEXT_COLOR: str = "black"
+RESTART_PROMPT_TEXT_COLOR: str = "#000000"
 RESTART_PROMPT_CENTER_POSITION: Pii = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + BLOCK_SIZE)
 
 # game config
-GRID_COLOR: str = "black"
+GRID_COLOR: str = "#000000"
 DELAY: int = 200
 INTERVAL: int = 100
 
@@ -70,11 +85,8 @@ UPCOMING_NUMBER: int = 5
 SWITCH_BUTTON_START: Pii = (BLOCK_SIZE // 2, SCREEN_HEIGHT - 2 * BLOCK_SIZE)
 SWITCH_BUTTON_SIZE: Pii = (BLOCK_SIZE * 4, 3 * BLOCK_SIZE // 2)
 SWITCH_BUTTON_THEMES: list[str] = ["Piano", "Music Box", "Strings"]
-SWITCH_BUTTON_TEXT_COLOR: str = "black"
-SWITCH_BUTTON_BACKGROUND_COLOR: str = "light gray"
-SWITCH_BUTTON_BORDER_COLOR: str = "dark gray"
-SWITCH_BUTTON_BORDER_SIZE: int = 3
-SWITCH_BUTTON_BORDER_RADIUS: int = 10
+SWITCH_BUTTON_TEXT_COLOR: str = "#000000"
+
 SWITCH_BUTTON_FILL_CENTER: bool = True
 
 VOLUME_BUTTON_START: Pii = (BLOCK_SIZE // 2, SCREEN_HEIGHT - 5 * BLOCK_SIZE)
@@ -83,14 +95,9 @@ VOLUME_BUTTON_EXPAND_RECT: Pii = (2 * BLOCK_SIZE, 2)
 VOLUME_BUTTON_CIRCLE_RADIUS: int = 5
 VOLUME_BUTTON_STARTING_VOLUME: float = 1
 VOLUME_BUTTON_SPEAKER_SIZE: Pii = (BLOCK_SIZE, BLOCK_SIZE)
-VOLUME_BUTTON_BACKGROUND_COLOR: str = "light gray"
-VOLUME_BUTTON_BORDER_COLOR: str = "dark gray"
-VOLUME_BUTTON_BORDER_SIZE: int = 3
-VOLUME_BUTTON_BORDER_RADIUS: int = 10
 VOLUME_BUTTON_BAR_OFFSET: int = 5
-VOLUME_CLAMP: float = 0.017
-VOLUME_BUTTON_HOVER_DELAY: int = 300
-VOLUME_BUTTON_DELAY: int = 150
+VOLUME_CLAMP: float = 0.001
+VOLUME_BUTTON_ANIMATION_TIME_MS: int = 200
 VOLUME_BUTTON_FILL_CENTER: bool = True
 
 TEXT_BUTTON_STARTS: list[Pii] = [
@@ -102,9 +109,9 @@ TEXT_BUTTON_STARTS: list[Pii] = [
 ]
 TEXT_BUTTON_SIZE: Pii = (3 * BLOCK_SIZE, BLOCK_SIZE)
 TEXT_BUTTON_TEXTS: list[str] = ["Held", "Next", "Score", "Level", "Lines"]
-TEXT_BUTTON_TEXT_COLOR: str = "black"
+TEXT_BUTTON_TEXT_COLOR: str = "#000000"
 
-SCORE_COLOR: str = "dark gray"
+SCORE_COLOR: str = "#707070"
 SCORE_STARTS: list[Pii] = [
     (BLOCK_SIZE, 17 * BLOCK_SIZE // 2),
     (BLOCK_SIZE, 21 * BLOCK_SIZE // 2),

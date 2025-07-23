@@ -1,5 +1,5 @@
 import pygame
-from typing import Callable
+from collections.abc import Callable
 from abc import ABC, abstractmethod
 from constants import Action
 

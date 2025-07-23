@@ -60,7 +60,6 @@ class TetrisBlock(BlockGroup):
 
     def __init__(
         self,
-        screen: pygame.Surface,
         block_id: int,
         obstacle_group: BlockGroup,
         x_offset=None,
@@ -90,7 +89,7 @@ class TetrisBlock(BlockGroup):
             for block in TetrisBlock.BLOCKS[block_id]
         ]
 
-        super().__init__(screen, *(blocks))
+        super().__init__(*(blocks))
 
     def update_block(self, event: pygame.event.Event) -> int:
         if not self.__player_controlled:
@@ -216,7 +215,7 @@ class TetrisBlock(BlockGroup):
         return True
 
     def clone(self) -> "TetrisBlock":
-        cloned = TetrisBlock(self.screen, self.block_id, self.obstacle_group)
+        cloned = TetrisBlock(self.block_id, self.obstacle_group)
         cloned.empty()
         for sprite in self.sprites():
             cloned.add_internal(Block(sprite.rect.topleft, self.block_id))

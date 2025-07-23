@@ -6,7 +6,6 @@ from util import add_pii, scale_pii
 class SwitchButton:
     def __init__(
         self,
-        screen: pygame.Surface,
         position: Pii,
         size: Pii,
         text_options: list[str],
@@ -17,7 +16,7 @@ class SwitchButton:
         border_radius: int,
         fill_center: bool,
     ) -> None:
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
         self.position = position
         self.size = size
 
@@ -29,7 +28,7 @@ class SwitchButton:
         self.border_radius = border_radius
         self.fill_center = fill_center
 
-        self.font = pygame.font.SysFont("Roboto", 30)
+        self.font = pygame.font.SysFont(FONT, TEXT_SIZE)
         self.rect = pygame.rect.Rect(self.position, self.size)
 
         self.current_text_index = 0

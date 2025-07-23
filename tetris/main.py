@@ -21,7 +21,7 @@ from constants import *
 
 # pygame init
 pygame.init()
-screen = pygame.display.set_mode(SCREEN_SIZE, pygame.RESIZABLE)
+screen = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Tetris Clone")
 image = pygame.image.load(LOGO_PATH)
 pygame.display.set_icon(image)

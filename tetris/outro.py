@@ -7,7 +7,6 @@ from screen import Screen
 class Outro(Screen):
     def __init__(self) -> None:
         super().__init__()
-        self.screen = pygame.display.get_surface()
         cover_screen = pygame.surface.Surface(self.screen.get_size())
         cover_screen.set_alpha(COVER_SCREEN_TRANSPARENCY)
         cover_screen.fill(COVER_SCREEN_COLOR)

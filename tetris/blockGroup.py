@@ -5,9 +5,9 @@ from collections import defaultdict
 
 
 class BlockGroup(pygame.sprite.Group):
-    def __init__(self, screen: pygame.Surface, *blocks: Block):
+    def __init__(self, *blocks: Block):
         super().__init__(*blocks)
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
 
     def check_lines(self) -> int:
         line_clears = 0

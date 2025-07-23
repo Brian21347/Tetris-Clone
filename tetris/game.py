@@ -6,16 +6,15 @@ from random import shuffle
 from constants import *
 from volumeButton import VolumeButton
 from switchButton import SwitchButton
-from textBox import TextBox
+from text import Text
 from screen import Screen
 
 
 class Game(Screen):
     def __init__(self):
         super().__init__()
-        self.screen = pygame.display.get_surface()
-        self.obstacle_group = BlockGroup(self.screen)
-        self.controlled_block = TetrisBlock(self.screen, 7, self.obstacle_group)
+        self.obstacle_group = BlockGroup()
+        self.controlled_block = TetrisBlock(7, self.obstacle_group)
 
         self.grid_screen = pygame.surface.Surface(SCREEN_SIZE).convert_alpha()
         self.grid_screen.fill([0, 0, 0, 0])
@@ -36,37 +35,34 @@ class Game(Screen):
         self.controlled_block.controlled()
 
         self.score = 0
-        self.font = pygame.font.SysFont("Roboto", 30)
+        self.font = pygame.font.SysFont(FONT, TEXT_SIZE)
 
         self.switch_button = SwitchButton(
-            self.screen,
             SWITCH_BUTTON_START,
             SWITCH_BUTTON_SIZE,
             SWITCH_BUTTON_THEMES,
             SWITCH_BUTTON_TEXT_COLOR,
-            SWITCH_BUTTON_BACKGROUND_COLOR,
-            SWITCH_BUTTON_BORDER_COLOR,
-            SWITCH_BUTTON_BORDER_SIZE,
-            SWITCH_BUTTON_BORDER_RADIUS,
+            BUTTON_BACKGROUND_COLOR,
+            BUTTON_BORDER_COLOR,
+            BUTTON_BORDER_SIZE,
+            BUTTON_BORDER_RADIUS,
             SWITCH_BUTTON_FILL_CENTER,
         )
 
         self.volume_button = VolumeButton(
-            self.screen,
             VOLUME_BUTTON_START,
             VOLUME_BUTTON_SIZE,
             VOLUME_BUTTON_EXPAND_RECT,
             VOLUME_BUTTON_STARTING_VOLUME,
-            VOLUME_BUTTON_BACKGROUND_COLOR,
-            VOLUME_BUTTON_BORDER_COLOR,
-            VOLUME_BUTTON_BORDER_SIZE,
-            VOLUME_BUTTON_BORDER_RADIUS,
+            BUTTON_BACKGROUND_COLOR,
+            BUTTON_BORDER_COLOR,
+            BUTTON_BORDER_SIZE,
+            BUTTON_BORDER_RADIUS,
             VOLUME_BUTTON_FILL_CENTER,
         )
 
         self.text_buttons = [
-            TextBox(
-                self.screen,
+            Text(
                 start,
                 TEXT_BUTTON_SIZE,
                 text,
@@ -100,14 +96,10 @@ class Game(Screen):
     def hold(self) -> None:
         if self.__held is not None:
             tmp = self.__held.block_id
-            self.__held = TetrisBlock(
-                self.screen, self.controlled_block.block_id, self.obstacle_group
-            )
+            self.__held = TetrisBlock(self.controlled_block.block_id, self.obstacle_group)
             self.controlled_block.add_block(tmp)
         else:
-            self.__held = TetrisBlock(
-                self.screen, self.controlled_block.block_id, self.obstacle_group
-            )
+            self.__held = TetrisBlock(self.controlled_block.block_id, self.obstacle_group)
             self.add_block()
 
         self.__held.uncontrolled()
@@ -159,10 +151,9 @@ class Game(Screen):
                 ],
             )
 
-        if (
-            not self.controlled_block.sprites() and not self.add_block()
-        ):  # check if the block was placed
-            pygame.mixer.music.fadeout(1)
+        # check that the current block was placed and the next block is not placable
+        if not self.controlled_block.sprites() and not self.add_block():
+            pygame.mixer.music.fadeout(1000)
             self.hide()
             self.send_action(Action.hide)
 
@@ -172,7 +163,6 @@ class Game(Screen):
         for block_id in block_ids:
             self.queue.append(
                 TetrisBlock(
-                    self.screen,
                     block_id,
                     self.obstacle_group,
                     x_offset=UPCOMING_GRID_START[0],
